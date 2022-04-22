@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template
 from App import app
-
+from App.db import get_db_connection
 
 @app.route("/")
 def home():
@@ -8,7 +8,10 @@ def home():
 
 @app.route("/<name>")
 def user(name):
-    return render_template("index.html", content=name)
+    conn = get_db_connection()
+    temps = conn.execute('SELECT * from blokady').fetchall()
+    conn.close()
+    return render_template("index.html", name=name, sqls=temps)
 
 @app.route("/admin")
 def admin():

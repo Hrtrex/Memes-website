@@ -4,6 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 /.vs/usmiechnij-sie/v17
+/env
 
 # User-specific files
 *.rsuser
@@ -363,4 +364,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/env
