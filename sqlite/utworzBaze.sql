@@ -28,6 +28,9 @@ CREATE TABLE memy (
     nazwa_pliku                TEXT NOT NULL,
     data_dodania               DATE NOT NULL,
     uzytkownicy_id_uzytkownika INTEGER NOT NULL,
+    tytul                      TEXT NOT NULL,
+    opis                       TEXT NOT NULL,
+    kategoria                  TEXT NOT NULL,
 	CONSTRAINT relation_1 FOREIGN KEY ( uzytkownicy_id_uzytkownika )
         REFERENCES uzytkownicy ( id_uzytkownika )
 );
@@ -57,6 +60,7 @@ CREATE TABLE uzytkownicy (
     id_uzytkownika  INTEGER PRIMARY KEY NOT NULL,
     login           TEXT NOT NULL,
     haslo           TEXT NOT NULL,
+    email           TEXT NOT NULL,
     typ_uzytkownika SMALLINT NOT NULL,
     data_dolaczenia DATE NOT NULL
 );
