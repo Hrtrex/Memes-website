@@ -364,3 +364,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+.vscode/settings.json
+connection.session.sql
+postgresql/query.sql
+sqlite
+
