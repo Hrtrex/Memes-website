@@ -1,17 +1,35 @@
 from flask import Flask, redirect, url_for, render_template
 from App import app
 from App.db import get_db_connection
-
+import os
+import psycopg2
+def get_db_connection():
+    conn = psycopg2.connect(host='localhost',
+                            database='db',
+                            user='postgres',
+                            password='root')
+    return conn
 @app.route("/")
+
+
+
 def home():
     return "<h1>Home page</h1>"
 
+@app.route("/memesRanking")
+def getMemesSortedByRatings():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('select id_mema,tytul,kategoria,CAST(avg(jaka_ocena) as NUMERIC(10,1)) srednia from oceny_memow,memy where memy.id_mema=oceny_memow.Memy_id_mema group by id_mema having avg(jaka_ocena) is not null order by srednia desc;')
+    memy = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('memesRanking.html', memy=memy)
 @app.route("/<name>")
 def user(name):
-    conn = get_db_connection()
-    temps = conn.execute('SELECT * from blokady').fetchall()
-    conn.close()
-    return render_template("index.html", name=name, sqls=temps)
+    
+
+    return render_template("index.html")
 
 @app.route("/admin")
 def admin():

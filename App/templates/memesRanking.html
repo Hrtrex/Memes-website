@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html lang="pl" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Ranking Memow</title>
+    <style>
+        img {
+            display: inline-block
+        }
+    </style>
+</head>
+<body>
+    <h1>Ranking memow</h1>
+    {% for mem in memy %}
+    <h3>Id mema: {{mem[0]}}</h3>
+    <h3>Tytul mema: {{mem[1]}}</h3>
+    <h3>Srednia ocena: {{mem[3]}}</h3>
+    <h3>Kategoria mema: {{mem[2]}}</h3>
+    <hr></hr>
+    {% endfor %}
+    
+</body>
+</html>
