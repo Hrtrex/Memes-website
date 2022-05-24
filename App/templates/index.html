@@ -5,21 +5,20 @@
 	<meta charset="utf-8" />
 	<title>Home page</title>
 	<meta charset="utf-8" />
-	<title>Home page</title>
+	<title>{% block title %} Home page{% endblock %}</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 	<style>
-
-        body {
-            background-color: #2e2e2e;
-            color: #9e9e9e;
-        }
+		body {
+			background-color: #2e2e2e;
+			color: #9e9e9e;
+		}
 	</style>
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
 		<div class="container-fluid">
 
-			<a class="navbar-brand" href="#"><img src="{{url_for('static', filename='logo.png')}}" align="middle" width="30" height="30" class="d-inline-block mr-1 align-bottom" />   Uśmiechnij się</a>
+			<a class="navbar-brand" href="#"><img src="{{url_for('static', filename='logo.gif')}}" align="middle" width="30" height="30" class="d-inline-block mr-1 align-bottom" />   Uśmiechnij się</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -32,7 +31,7 @@
 						<a class="nav-link" href="#">Panel admina</a>
 					</li>
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<a class="nav-link dropdown-toggle" href="localhost:5000/memesRanking" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							Rankingi
 						</a>
 						<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
@@ -47,6 +46,11 @@
 			</div>
 		</div>
 	</nav>
+	<div id="content" class="mx-auto mt-5 bg-dark" style="width:70%; background-color:black;">
+		{% block content %}
+
+		{%endblock%}
+	</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 
 </body>
