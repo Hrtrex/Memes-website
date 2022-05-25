@@ -1,0 +1,7 @@
+{% extends 'index.html' %}
+{% block content %}
+    {% for link in links %}
+        <img src="{{link[0]}}" class="d-block mx-auto" >
+        <br>
+    {% endfor %}
+{% endblock %}
