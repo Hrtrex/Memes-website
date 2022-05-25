@@ -1,20 +1,19 @@
 from flask import Flask, redirect, url_for, render_template
 from App import app
 from App.db import get_db_connection
-import os
 import psycopg2
+
 def get_db_connection():
-    conn = psycopg2.connect(host='localhost',
+    conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
                             database='db',
-                            user='postgres',
-                            password='root')
+                            user='hrtrex',
+                            password='Jebacdisa_12',
+                            sslmode='require')
     return conn
+
 @app.route("/")
-
-
-
 def home():
-    return "<h1>Home page</h1>"
+    return render_template("index.html")
 
 @app.route("/memesRanking")
 def getMemesSortedByRatings():
@@ -25,10 +24,9 @@ def getMemesSortedByRatings():
     cur.close()
     conn.close()
     return render_template('memesRanking.html', memy=memy)
+
 @app.route("/<name>")
 def user(name):
-    
-
     return render_template("index.html")
 
 @app.route("/admin")
