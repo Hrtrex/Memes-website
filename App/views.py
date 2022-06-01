@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for, render_template
 from App import app
 import psycopg2
-from App.memes import get_urls_jbzd, get_urls_kwejk
+from App.memes import Meme
 
 def get_db_connection():
     conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
@@ -36,13 +36,13 @@ def admin():
 @app.route("/jbzd/", defaults={'page': ''})
 @app.route("/jbzd/<page>")
 def jbzd(page):
-    urls, votes = get_urls_jbzd(page)
-    data = list(zip(urls, votes))
-    return render_template("memy.html", links=data)
+    meme_data = Meme()
+    meme_data.get_memes_jbzd(f'{page}')
+    return render_template("memy.html", memes = meme_data)
 
 @app.route("/kwejk/", defaults={'page': ''})
 @app.route("/kwejk/<page>")
 def kwejk(page):
-    urls, votes = get_urls_kwejk(page)
-    data = list(zip(urls, votes))
-    return render_template("memy.html", links=data)
+    meme_data = Meme()
+    meme_data.get_memes_kwejk(f'{page}')
+    return render_template("memy.html", memes = meme_data)
