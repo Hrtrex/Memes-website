@@ -1,7 +1,15 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, request, flash, session
 from App import app
 import psycopg2
+import psycopg2.extras
+import re
+import werkzeug
+from werkzeug.security import generate_password_hash, check_password_hash
 from App.memes import get_urls_jbzd, get_urls_kwejk
+
+
+
+
 
 def get_db_connection():
     conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
@@ -46,3 +54,21 @@ def kwejk(page):
     urls, votes = get_urls_kwejk(page)
     data = list(zip(urls, votes))
     return render_template("memy.html", links=data)
+
+#Logowanie
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+            error = 'Invalid Credentials. Please try again.'
+        else:
+            return redirect(url_for('home'))
+    return render_template('login.html', error=error)
+
+
+
+#Rejestracja
+@app.route('/register')
+def register():
+    return render_template('register.html')
