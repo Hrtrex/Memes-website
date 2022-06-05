@@ -4,11 +4,11 @@ import psycopg2
 from App.memes import get_urls_jbzd, get_urls_kwejk
 
 def get_db_connection():
-    conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
-                            database='db',
-                            user='hrtrex',
-                            password='Jebacdisa_12',
-                            sslmode='require')
+    conn = psycopg2.connect(host='localhost',
+                            database='memy',
+                            user='postgres',
+                            password='D-upa123'
+                            )
     return conn
 
 @app.route("/")
@@ -30,8 +30,16 @@ def user(name):
     return render_template("index.html")
 
 @app.route("/admin")
-def admin():
-    return redirect(url_for("home"))
+def getZgloszenia():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('select id_zgloszenia,zgloszenia_komentarzy.tresc as powod,komentarze.tresc as komentarz,czy_rozpatrzony,zgloszenia_komentarzy.komentarze_id_komentarza,zgloszenia_komentarzy.uzytkownicy_id_uzytkownika as zglaszajacyid,zgl.login as zglaszajacy,data_dodania,komentarze.uzytkownicy_id_uzytkownika as komentujacyid,kom.login as komentujacy from zgloszenia_komentarzy, komentarze,(select id_uzytkownika, login from uzytkownicy) zgl,(select id_uzytkownika,login from uzytkownicy) kom where zgloszenia_komentarzy.uzytkownicy_id_uzytkownika = zgl.id_uzytkownika and  komentarze.uzytkownicy_id_uzytkownika = kom.id_uzytkownika and zgloszenia_komentarzy.komentarze_id_komentarza = komentarze.id_komentarza order by data_dodania desc;')
+    zgloszeniakom = cur.fetchall()
+    cur.execute('select id_zgloszenia,zgloszenia_memow.tresc as powod,memy.nazwa_pliku as obraz,czy_rozpatrzony,zgloszenia_memow.memy_id_mema,zgloszenia_memow.uzytkownicy_id_uzytkownika as zglaszajacyid,zgl.login as zglaszajacy,data_dodania,memy.uzytkownicy_id_uzytkownika as wstawiajacyid,wst.login as wstawiajacy from zgloszenia_memow,memy,(select id_uzytkownika, login from uzytkownicy) zgl,(select id_uzytkownika,login from uzytkownicy) wst where zgloszenia_memow.memy_id_mema = memy.id_mema and zgloszenia_memow.uzytkownicy_id_uzytkownika = zgl.id_uzytkownika and  memy.uzytkownicy_id_uzytkownika = wst.id_uzytkownika order by data_dodania desc;')
+    zgloszeniamem = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("admin.html", zgloszeniamem = zgloszeniamem, zgloszeniakom = zgloszeniakom)
 
 @app.route("/jbzd/", defaults={'page': ''})
 @app.route("/jbzd/<page>")
