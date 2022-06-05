@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <style>
+        div
+        {
+            text-align:center;
+        }
+        #container
+        {
+            width:80%;
+            margin-left:auto;
+            margin-right:auto;
+            position:relative;
+        }
+        div[id^="przycisk_"] {
+            width: 50%;
+            height: 50px;
+            float: left;
+            cursor: pointer;
+            border-bottom: 1px solid black;
+            border-top: 1px solid black;
+        }
+        div[id^="zgloszenia_"]{
+            clear: both;
+            width: 100%;
+            position: absolute;
+            top: 50px;
+            left: 0px;
+        }
+        .zgloszenie_property
+        {
+            font-weight:bold;
+        }
+        .zgloszeniekom_container {
+            border-bottom: 1px solid black;
+            height: 200px;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+            display:block;
+        }
+        .zgloszeniekom_dane {
+            width: 60%;
+            height: 100%;
+            float: left;
+            text-align: left;
+            height: 200px;
+            padding: 5px;
+            position: absolute;
+            border-right: 1px solid black;
+        }
+        .zgloszeniekom_akcje {
+            width: 40%;
+            height: 100%;
+            float: right;
+            clear: both;
+            height:200px;
+            position: absolute;
+            left: 60%;
+            
+        }
+        .zgloszeniemem_container {
+            border-bottom: 1px solid black;
+            height: 150px;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+            display:block;
+        }
+
+        .zgloszeniemem_dane {
+            width: 30%;
+            height: 150px;
+            float: left;
+            text-align: left;
+            border-right: 1px solid black;
+            padding: 5px;
+            position: absolute;
+        }
+        .zgloszeniemem_obraz {
+            width: 30%;
+            height: 150px;
+            float: left;
+            border-right: 1px solid black;
+            position: absolute;
+            left: 30%;
+        }
+        .zgloszeniemem_obraz img
+        {
+            width:150px;
+            height:150px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
+        .zgloszeniemem_akcje {
+            width: 40%;
+            height: 150px;
+            float: right;
+            clear: both;
+            position: absolute;
+            left: 60%;
+        }
+
+    </style>
+</head>
+
+<body>
+ 
+    <div id="container">
+
+        <div id="przycisk_zgloszenia_mem" style="border-left:1px solid black">Zgłoszenia memów</div>
+        <div id="przycisk_zgloszenia_kom" style="border-right:1px solid black">Zgłoszenia komentarzy</div>
+        {% block content %}
+        <!--0 - id, 1-powód, 2-obraz, 3-status, 4-idmema, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-wstawiajacyid, 9-wstawiajacy -->
+        <div id="zgloszenia_mem">
+            {% for zgloszenie in zgloszeniamem %}
+
+            <div class="zgloszeniemem_container">
+                <div class="zgloszeniemem_dane">
+                    <span class="zgloszenie_property">Zgłoszenie nr: </span>{{zgloszenie[0]}} <br />
+                    <span class="zgloszenie_property">Data zgłoszenia: </span>{{zgloszenie[7]}} <br />
+                    <span class="zgloszenie_property">Zgłaszajacy: </span>{{zgloszenie[6]}} <br />
+                    <span class="zgloszenie_property">Powód: </span>{{zgloszenie[1]}} <br />
+                    <span class="zgloszenie_property">Wstawiający: </span>{{zgloszenie[9]}} <br />
+                </div>
+                <div class="zgloszeniemem_obraz">
+                    <img src="{{zgloszenie[2]}}">
+                </div>
+                <div class="zgloszeniemem_akcje">
+                    placeholder
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!--0 - id, 1-powód, 2-treść, 3-status, 4-idkom, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-idkomentujacego, 9-komentujacy -->
+        <div id="zgloszenia_kom">
+            {% for zgloszenie in zgloszeniakom %}
+
+            <div class="zgloszeniekom_container">
+                <div class="zgloszeniekom_dane">
+                    <span class="zgloszenie_property">Zgłoszenie nr: </span>{{zgloszenie[0]}} <br />
+                    <span class="zgloszenie_property">Data zgłoszenia: </span>{{zgloszenie[7]}} <br />
+                    <span class="zgloszenie_property">Zgłaszajacy: </span>{{zgloszenie[6]}} <br />
+                    <span class="zgloszenie_property">Powód: </span>{{zgloszenie[1]}} <br />
+                    <span class="zgloszenie_property">Komentujący: </span>{{zgloszenie[9]}} <br />
+                    <span class="zgloszenie_property">treść komentarza: </span>{{zgloszenie[2]}} <br />
+                </div>
+                <div class="zgloszeniekom_akcje">
+                    placeholder
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endblock %}
+    </div>
+
+</body>
+</html>
+
+<script>
+    var kom_prz = document.getElementById("przycisk_zgloszenia_kom");
+    var mem_prz = document.getElementById("przycisk_zgloszenia_mem");
+    var kom = document.getElementById("zgloszenia_kom");
+    var mem = document.getElementById("zgloszenia_mem");
+    function memf() {
+        mem_prz.style.backgroundColor = "#d1cbcb";
+        kom_prz.style.backgroundColor = "#ffffff";
+        kom.style.visibility = "hidden";
+        mem.style.visibility = "visible";
+    };
+    function komf() {
+        mem_prz.style.backgroundColor = "#ffffff";
+        kom_prz.style.backgroundColor = "#d1cbcb";
+        kom.style.visibility = "visible";
+        mem.style.visibility = "hidden";
+    };
+    window.onload = memf;
+    mem_prz.onclick = memf;
+    kom_prz.onclick = komf;
+</script>
