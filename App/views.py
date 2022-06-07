@@ -55,7 +55,7 @@ def kwejk(page):
     data = list(zip(urls, votes))
     return render_template("memy.html", links=data)
 
-#Logowanie ( w remoncie )
+#Logowanie
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -68,7 +68,26 @@ def login():
 
 
 
-#Rejestracja ( w remoncie )
+#Rejestracja
 @app.route('/register')
 def register():
+
     return render_template('register.html')
+
+
+#reset hasla
+@app.route('/passwordReset')
+def resetP():
+    return render_template('passwordReset.html')
+
+#user panel
+@app.route('/userPanel')
+def userP():
+    return render_template('userPanel.html')
+
+
+#email ver.
+@app.route('/emailCheck')
+def emailcheck():
+    return render_template('emailCheck.html')
+
