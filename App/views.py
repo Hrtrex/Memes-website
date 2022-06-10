@@ -37,9 +37,13 @@ def getZgloszenia():
     zgloszeniakom = cur.fetchall()
     cur.execute('select id_zgloszenia,zgloszenia_memow.tresc as powod,memy.nazwa_pliku as obraz,czy_rozpatrzony,zgloszenia_memow.memy_id_mema,zgloszenia_memow.uzytkownicy_id_uzytkownika as zglaszajacyid,zgl.login as zglaszajacy,data_dodania,memy.uzytkownicy_id_uzytkownika as wstawiajacyid,wst.login as wstawiajacy from zgloszenia_memow,memy,(select id_uzytkownika, login from uzytkownicy) zgl,(select id_uzytkownika,login from uzytkownicy) wst where zgloszenia_memow.memy_id_mema = memy.id_mema and zgloszenia_memow.uzytkownicy_id_uzytkownika = zgl.id_uzytkownika and  memy.uzytkownicy_id_uzytkownika = wst.id_uzytkownika order by data_dodania desc;')
     zgloszeniamem = cur.fetchall()
+    id_zgl_kom = [x[0] for x in zgloszeniakom]
+    id_zgl_mem = [x[0] for x in zgloszeniamem]
+    n_zgl_kom = len(id_zgl_kom)
+    n_zgl_mem = len(id_zgl_mem)
     cur.close()
     conn.close()
-    return render_template("admin.html", zgloszeniamem = zgloszeniamem, zgloszeniakom = zgloszeniakom)
+    return render_template("admin.html", zgloszeniamem = zgloszeniamem, zgloszeniakom = zgloszeniakom, id_zgl_kom = id_zgl_kom, id_zgl_mem = id_zgl_mem, n_zgl_kom = n_zgl_kom, n_zgl_mem = n_zgl_mem)
 
 @app.route("/jbzd/", defaults={'page': ''})
 @app.route("/jbzd/<page>")
