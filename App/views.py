@@ -4,11 +4,11 @@ import psycopg2
 from App.memes import get_urls_jbzd, get_urls_kwejk
 
 def get_db_connection():
-    conn = psycopg2.connect(host='localhost',
-                            database='memy',
-                            user='postgres',
-                            password='D-upa123'
-                            )
+    conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
+                            database='db',
+                            user='hrtrex',
+                            password='Jebacdisa_12',
+                            sslmode='require')
     return conn
 
 @app.route("/")
