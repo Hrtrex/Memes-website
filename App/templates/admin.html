@@ -119,6 +119,17 @@
             opacity:0.5;
             visibility:hidden;
         }
+        .zgloszeniemem_confirm
+        {
+            visibility:hidden;
+            position:fixed;
+            top:25%;
+            left:35%;
+            z-index:200;
+            width:30%;
+            height:20%;
+            background-color:white;
+        }
     </style>
 </head>
 
@@ -129,47 +140,54 @@
         <div id="przycisk_zgloszenia_mem" style="border-left:1px solid black">Zgłoszenia memów</div>
         <div id="przycisk_zgloszenia_kom" style="border-right:1px solid black">Zgłoszenia komentarzy</div>
         {% block content %}
-        <!--0 - id, 1-powód, 2-obraz, 3-status, 4-idmema, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-wstawiajacyid, 9-wstawiajacy -->
-        <div id="zgloszenia_mem">
-            {% for i in range(n_zgl_mem) %}
+        <form action="adminAction" method="post">
+            <!--0 - id, 1-powód, 2-obraz, 3-status, 4-idmema, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-wstawiajacyid, 9-wstawiajacy -->
+            <div id="zgloszenia_mem">
+                {% for i in range(n_zgl_mem) %}
 
-            <div class="zgloszeniemem_container" id="zgloszeniemem_{{id_zgl_mem[i]}}">
-                <div class="zgloszeniemem_dane">
-                    <span class="zgloszenie_property">Zgłoszenie nr: </span>{{zgloszeniamem[i][0]}} <br />
-                    <span class="zgloszenie_property">Data zgłoszenia: </span>{{zgloszeniamem[i][7]}} <br />
-                    <span class="zgloszenie_property">Zgłaszajacy: </span>{{zgloszeniamem[i][6]}} <br />
-                    <span class="zgloszenie_property">Powód: </span>{{zgloszeniamem[i][1]}} <br />
-                    <span class="zgloszenie_property">Wstawiający: </span>{{zgloszeniamem[i][9]}} <br />
+                <div class="zgloszeniemem_container" id="zgloszeniemem_{{id_zgl_mem[i]}}">
+                    <div class="zgloszeniemem_dane">
+                        <span class="zgloszenie_property">Zgłoszenie nr: </span>{{zgloszeniamem[i][0]}} <br />
+                        <span class="zgloszenie_property">Data zgłoszenia: </span>{{zgloszeniamem[i][7]}} <br />
+                        <span class="zgloszenie_property">Zgłaszajacy: </span>{{zgloszeniamem[i][6]}} <br />
+                        <span class="zgloszenie_property">Powód: </span>{{zgloszeniamem[i][1]}} <br />
+                        <span class="zgloszenie_property">Wstawiający: </span>{{zgloszeniamem[i][9]}} <br />
+                    </div>
+                    <div class="zgloszeniemem_obraz">
+                        <img src="{{zgloszeniamem[i][2]}}">
+                    </div>
+                    <div class="zgloszeniemem_confirm" id="zgloszeniemem_confirm_{{id_zgl_mem[i]}}">
+
+                        {{id_zgl_mem[i]}}
+
+                    </div>
+                    <div class="zgloszeniemem_akcje">
+                        <button onclick="confirm({{id_zgl_mem[i]}})">Usuń mema</button><br />
+                        <button>Zablokuj użytkownika</button><br />
+                        <button class="mem_zamknij" type="submit" value="{{id_zgl_mem[i]}}" name="mem_zamknij"">Zamknij zgłoszenie</button><br />
+                    </div>
                 </div>
-                <div class="zgloszeniemem_obraz">
-                    <img src="{{zgloszeniamem[i][2]}}">
-                </div>
-                <div class="zgloszeniemem_akcje">
-                    <button onclick="confirm({{id_zgl_mem[i]}})">Usuń mema</button><br />
-                    <button>Zablokuj użytkownika</button><br />
-                    <button class="mem_zamknij">Zamknij zgłoszenie</button><br />
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-        <!--0 - id, 1-powód, 2-treść, 3-status, 4-idkom, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-idkomentujacego, 9-komentujacy -->
-        <div id="zgloszenia_kom">
-            {% for i in range(n_zgl_kom) %}
-            <div class="zgloszeniekom_container" id="zgloszeniekom_{{id_zgl_kom[i]}}">
-                <div class="zgloszeniekom_dane">
-                    <span class="zgloszenie_property">Zgłoszenie nr: </span>{{zgloszeniakom[i][0]}} <br />
-                    <span class="zgloszenie_property">Data zgłoszenia: </span>{{zgloszeniakom[i][7]}} <br />
-                    <span class="zgloszenie_property">Zgłaszajacy: </span>{{zgloszeniakom[i][6]}} <br />
-                    <span class="zgloszenie_property">Powód: </span>{{zgloszeniakom[i][1]}} <br />
-                    <span class="zgloszenie_property">Komentujący: </span>{{zgloszeniakom[i][9]}} <br />
-                    <span class="zgloszenie_property">treść komentarza: </span>{{zgloszeniakom[i][2]}} <br />
+            <!--0 - id, 1-powód, 2-treść, 3-status, 4-idkom, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-idkomentujacego, 9-komentujacy -->
+            <div id="zgloszenia_kom">
+                {% for i in range(n_zgl_kom) %}
+                <div class="zgloszeniekom_container" id="zgloszeniekom_{{id_zgl_kom[i]}}">
+                    <div class="zgloszeniekom_dane">
+                        <span class="zgloszenie_property">Zgłoszenie nr: </span>{{zgloszeniakom[i][0]}} <br />
+                        <span class="zgloszenie_property">Data zgłoszenia: </span>{{zgloszeniakom[i][7]}} <br />
+                        <span class="zgloszenie_property">Zgłaszajacy: </span>{{zgloszeniakom[i][6]}} <br />
+                        <span class="zgloszenie_property">Powód: </span>{{zgloszeniakom[i][1]}} <br />
+                        <span class="zgloszenie_property">Komentujący: </span>{{zgloszeniakom[i][9]}} <br />
+                        <span class="zgloszenie_property">treść komentarza: </span>{{zgloszeniakom[i][2]}} <br />
+                    </div>
+                    <div class="zgloszeniekom_akcje">
+                        placeholder
+                    </div>
                 </div>
-                <div class="zgloszeniekom_akcje">
-                    placeholder
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
+        </form>
         {% endblock %}
     </div>
 
@@ -196,7 +214,7 @@
     };
     function confirm(x) {
         document.getElementById("darkscreen").style.visibility = "visible";
-        alert(x);
+        document.getElementById("zgloszeniemem_confirm_" + x).style.visibility = "visible";
     }
     window.onload = memf;
     mem_prz.onclick = memf;
