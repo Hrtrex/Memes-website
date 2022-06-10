@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, request
 from App import app
 import psycopg2
 from App.memes import get_urls_jbzd, get_urls_kwejk
@@ -45,6 +45,17 @@ def getZgloszenia():
     conn.close()
     return render_template("admin.html", zgloszeniamem = zgloszeniamem, zgloszeniakom = zgloszeniakom, id_zgl_kom = id_zgl_kom, id_zgl_mem = id_zgl_mem, n_zgl_kom = n_zgl_kom, n_zgl_mem = n_zgl_mem)
 
+@app.route("/adminAction", methods=['POST'])
+def adminAction():
+    memZamknij = request.form["mem_zamknij"]
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("delete from zgloszenia_memow where id_zgloszenia="+str(memZamknij)+";")
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect("/admin")
 @app.route("/jbzd/", defaults={'page': ''})
 @app.route("/jbzd/<page>")
 def jbzd(page):
