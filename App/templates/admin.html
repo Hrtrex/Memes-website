@@ -5,43 +5,50 @@
     <title></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <style>
-        div
-        {
-            text-align:center;
+        body {
+            background-color: #2e2e2e;
+            color: #b8b9bb;
         }
-        #container
-        {
-            width:80%;
-            margin-left:auto;
-            margin-right:auto;
-            position:relative;
+        div {
+            text-align: center;
         }
+
+        #container {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+
         div[id^="przycisk_"] {
             width: 50%;
             height: 50px;
             float: left;
             cursor: pointer;
-            border-bottom: 1px solid black;
-            border-top: 1px solid black;
+            border-bottom: 2px solid black;
+            border-top: 2px solid black;
         }
-        div[id^="zgloszenia_"]{
+
+        div[id^="zgloszenia_"] {
             clear: both;
             width: 100%;
             position: absolute;
             top: 50px;
             left: 0px;
         }
-        .zgloszenie_property
-        {
-            font-weight:bold;
+
+        .zgloszenie_property {
+            font-weight: bold;
         }
+
         .zgloszeniekom_container {
-            border-bottom: 1px solid black;
+            border-bottom: 2px solid black;
             height: 200px;
-            border-left: 1px solid black;
-            border-right: 1px solid black;
-            display:block;
+            border-left: 2px solid black;
+            border-right: 2px solid black;
+            display: block;
         }
+
         .zgloszeniekom_dane {
             width: 60%;
             height: 100%;
@@ -50,24 +57,25 @@
             height: 200px;
             padding: 5px;
             position: absolute;
-            border-right: 1px solid black;
+            border-right: 2px solid black;
         }
+
         .zgloszeniekom_akcje {
             width: 40%;
             height: 100%;
             float: right;
             clear: both;
-            height:200px;
+            height: 200px;
             position: absolute;
             left: 60%;
-            
         }
+
         .zgloszeniemem_container {
-            border-bottom: 1px solid black;
+            border-bottom: 2px solid black;
             height: 150px;
-            border-left: 1px solid black;
-            border-right: 1px solid black;
-            display:block;
+            border-left: 2px solid black;
+            border-right: 2px solid black;
+            display: block;
         }
 
         .zgloszeniemem_dane {
@@ -75,25 +83,26 @@
             height: 150px;
             float: left;
             text-align: left;
-            border-right: 1px solid black;
+            border-right: 2px solid black;
             padding: 5px;
             position: absolute;
         }
+
         .zgloszeniemem_obraz {
             width: 30%;
             height: 150px;
             float: left;
-            border-right: 1px solid black;
+            border-right: 2px solid black;
             position: absolute;
             left: 30%;
         }
-        .zgloszeniemem_obraz img
-        {
-            width:150px;
-            height:150px;
-            margin-left:auto;
-            margin-right:auto;
-        }
+
+            .zgloszeniemem_obraz img {
+                width: 150px;
+                height: 150px;
+                margin-left: auto;
+                margin-right: auto;
+            }
 
         .zgloszeniemem_akcje {
             width: 40%;
@@ -103,15 +112,17 @@
             position: absolute;
             left: 60%;
         }
-        .zgloszeniemem_akcje button
-        {
-            margin:9px;
-            width:200px;
-        }
+
+            .zgloszeniemem_akcje button {
+                margin: 9px;
+                width: 200px;
+            }
+
         .zgloszeniekom_akcje button {
             margin: 18px;
             width: 200px;
         }
+
         #darkscreen {
             width: 100%;
             height: 100%;
@@ -122,6 +133,7 @@
             opacity: 0.5;
             visibility: hidden;
         }
+
         .zgloszenie_confirm {
             visibility: hidden;
             position: fixed;
@@ -130,25 +142,42 @@
             z-index: 200;
             width: 40%;
             height: 18%;
-            background-color: white;
-            padding-top:40px;
-            padding-bottom:20px;
+            background-color: #2e2e2e;
+            padding-top: 40px;
+            padding-bottom: 20px;
         }
-        .confirm_button
+
+        .confirm_button {
+            width: 80px;
+            margin: 0 10px 0 10px;
+        }
+
+        textarea {
+            width: 300px;
+            height: 50px;
+            margin: 6px;
+        }
+        #home
         {
-            width:80px;
-            margin:0 10px 0 10px;
+            padding:8px;
+            margin:5px;
+            border:2px solid black;
+            cursor:pointer;
+            position:fixed;
+            top:0;
+            left:0;
         }
     </style>
 </head>
-
+        {% block content %}
 <body>
+    <div id="home">Strona Główna</div>
     <div id="darkscreen"></div>
     <div id="container">
 
-        <div id="przycisk_zgloszenia_mem" style="border-left:1px solid black">Zgłoszenia memów</div>
-        <div id="przycisk_zgloszenia_kom" style="border-right:1px solid black">Zgłoszenia komentarzy</div>
-        {% block content %}
+        <div id="przycisk_zgloszenia_mem" style="border-left:2px solid black">Zgłoszenia memów</div>
+        <div id="przycisk_zgloszenia_kom" style="border-right:2px solid black">Zgłoszenia komentarzy</div>
+
         <form action="adminActionMem" method="post">
             <!--0 - id, 1-powód, 2-obraz, 3-status, 4-idmema, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-wstawiajacyid, 9-wstawiajacy -->
             <div id="zgloszenia_mem">
@@ -171,15 +200,15 @@
                         <button class="confirm_button" type="submit" name="action" value="usun{{id_zgl_mem[i]}}">Tak</button>
                         <button class="confirm_button" onclick="re_confirmUsunMem({{id_zgl_mem[i]}})" type="button">Nie</button>
                     </div>
-                    <div class="zgloszenie_confirm" id="zgloszeniemem_confirm_Ban{{id_zgl_mem[i]}}">
+                    <div class="zgloszenie_confirm" id="zgloszeniemem_confirm_Ban{{id_zgl_mem[i]}}" style="height:25%;">
 
                         <p>Czy na pewno chcesz zablokować autora tego mema (zgłoszenie nr: {{id_zgl_mem[i]}})?</p>
+                        <textarea name="banReason">na podstawie zgłoszenia /admin</textarea><br />
                         <select name="banDuration">
                             <option value="7" selected="selected">Tydzień</option>
                             <option value="30">Miesiąc</option>
                             <option value="365">Rok</option>
                         </select>
-                        <input type="text" value="na podstawie zgłoszenia /admin" name="banReason"/>
                         <button class="confirm_button" type="submit" name="action" value="ban{{id_zgl_mem[i]}}">Tak</button>
                         <button class="confirm_button" onclick="re_confirmMemBan({{id_zgl_mem[i]}})" type="button">Nie</button>
                     </div>
@@ -194,7 +223,7 @@
         </form>
         <form action="adminActionKom" method="post">
             <!--0 - id, 1-powód, 2-treść, 3-status, 4-idkom, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-idkomentujacego, 9-komentujacy -->
-            <div id="zgloszenia_kom">
+            <div id="zgloszenia_kom" style="visibility:hidden;">
                 {% for i in range(n_zgl_kom) %}
                 <div class="zgloszeniekom_container" id="zgloszeniekom_{{id_zgl_kom[i]}}">
                     <div class="zgloszeniekom_dane">
@@ -213,8 +242,8 @@
                 </div>
                 {% endfor %}
             </div>
-            </form>
-            {% endblock %}
+        </form>
+        {% endblock %}
     </div>
 
 </body>
@@ -225,16 +254,19 @@
     var mem_prz = document.getElementById("przycisk_zgloszenia_mem");
     var kom = document.getElementById("zgloszenia_kom");
     var mem = document.getElementById("zgloszenia_mem");
-    var zgloszenia_mem = document.getElementsByClassName("mem_zamknij");
     function memf() {
-        mem_prz.style.backgroundColor = "#d1cbcb";
-        kom_prz.style.backgroundColor = "#ffffff";
+        mem_prz.style.backgroundColor = "#b8b9bb";
+        mem_prz.style.color = "#2e2e2e";
+        kom_prz.style.color = "#b8b9bb";
+        kom_prz.style.backgroundColor = "#2e2e2e";
         kom.style.visibility = "hidden";
         mem.style.visibility = "visible";
     };
     function komf() {
-        mem_prz.style.backgroundColor = "#ffffff";
-        kom_prz.style.backgroundColor = "#d1cbcb";
+        mem_prz.style.backgroundColor = "#2e2e2e";
+        kom_prz.style.backgroundColor = "#b8b9bb";
+        kom_prz.style.color = "#2e2e2e";
+        mem_prz.style.color = "#b8b9bb";
         kom.style.visibility = "visible";
         mem.style.visibility = "hidden";
     };
@@ -244,7 +276,7 @@
     }
     function re_confirmUsunMem(x) {
         document.getElementById("darkscreen").style.visibility = "hidden";
-        document.getElementById("zgloszeniemem_confirm_Ban" + x).style.visibility = "hidden";
+        document.getElementById("zgloszeniemem_confirm_UsunMem" + x).style.visibility = "hidden";
     }
     function confirmMemBan(x) {
         document.getElementById("darkscreen").style.visibility = "visible";
@@ -257,7 +289,4 @@
     window.onload = memf;
     mem_prz.onclick = memf;
     kom_prz.onclick = komf;
-    
-
-
 </script>
