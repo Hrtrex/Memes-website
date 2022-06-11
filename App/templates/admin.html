@@ -138,10 +138,10 @@
             visibility: hidden;
             position: fixed;
             top: 25%;
-            left: 30%;
+            left: 5%;
             z-index: 200;
-            width: 40%;
-            height: 18%;
+            width: 90%;
+            height: 180px;
             background-color: #2e2e2e;
             padding-top: 40px;
             padding-bottom: 20px;
@@ -167,11 +167,15 @@
             top:0;
             left:0;
         }
+        #homelink:link, #homelink:visited, #homelink:hover, #homelink:active 
+        {
+            color: #b8b9bb;
+        }
     </style>
 </head>
         {% block content %}
 <body>
-    <div id="home">Strona Główna</div>
+    <a id="homelink" href="/"><div id="home">Home</div></a>
     <div id="darkscreen"></div>
     <div id="container">
 
@@ -200,7 +204,7 @@
                         <button class="confirm_button" type="submit" name="action" value="usun{{id_zgl_mem[i]}}">Tak</button>
                         <button class="confirm_button" onclick="re_confirmUsunMem({{id_zgl_mem[i]}})" type="button">Nie</button>
                     </div>
-                    <div class="zgloszenie_confirm" id="zgloszeniemem_confirm_Ban{{id_zgl_mem[i]}}" style="height:25%;">
+                    <div class="zgloszenie_confirm" id="zgloszeniemem_confirm_Ban{{id_zgl_mem[i]}}" style="height:250px;">
 
                         <p>Czy na pewno chcesz zablokować autora tego mema (zgłoszenie nr: {{id_zgl_mem[i]}})?</p>
                         <textarea name="banReason">na podstawie zgłoszenia /admin</textarea><br />
@@ -234,10 +238,28 @@
                         <span class="zgloszenie_property">Komentujący: </span>{{zgloszeniakom[i][9]}} <br />
                         <span class="zgloszenie_property">treść komentarza: </span>{{zgloszeniakom[i][2]}} <br />
                     </div>
+                    <div class="zgloszenie_confirm" id="zgloszeniekom_confirm_UsunKom{{id_zgl_kom[i]}}">
+
+                        <p>Czy na pewno chcesz usunąć ten komentarz (zgłoszenie nr: {{id_zgl_kom[i]}}) i rozpatrzeć inne powiązane zgłoszenia?</p>
+                        <button class="confirm_button" type="submit" name="action" value="usun{{id_zgl_kom[i]}}">Tak</button>
+                        <button class="confirm_button" onclick="re_confirmUsunKom({{id_zgl_kom[i]}})" type="button">Nie</button>
+                    </div>
+                    <div class="zgloszenie_confirm" id="zgloszeniekom_confirm_Ban{{id_zgl_kom[i]}}" style="height:250px;">
+
+                        <p>Czy na pewno chcesz zablokować autora tego komentarza (zgłoszenie nr: {{id_zgl_kom[i]}})?</p>
+                        <textarea name="banReason">na podstawie zgłoszenia /admin</textarea><br />
+                        <select name="banDuration">
+                            <option value="7" selected="selected">Tydzień</option>
+                            <option value="30">Miesiąc</option>
+                            <option value="365">Rok</option>
+                        </select>
+                        <button class="confirm_button" type="submit" name="action" value="ban{{id_zgl_kom[i]}}">Tak</button>
+                        <button class="confirm_button" onclick="re_confirmKomBan({{id_zgl_kom[i]}})" type="button">Nie</button>
+                    </div>
                     <div class="zgloszeniekom_akcje">
-                        <button onclick="confirmUsunKom({{id_zgl_kom[i]}})">Usuń komentarz</button><br />
-                        <button>Zablokuj użytkownika</button><br />
-                        <button class="kom_zamknij" type="submit" value="zamknij{{id_zgl_kom[i]}}" name="zamknij">Zamknij zgłoszenie</button><br />
+                        <button onclick="confirmUsunKom({{id_zgl_kom[i]}})" type="button">Usuń komentarz</button><br />
+                        <button onclick="confirmKomBan({{id_zgl_kom[i]}})" type="button">Zablokuj użytkownika</button><br />
+                        <button class="kom_zamknij" type="submit" value="zamknij{{id_zgl_kom[i]}}" name="action">Zamknij zgłoszenie</button><br />
                     </div>
                 </div>
                 {% endfor %}
@@ -285,6 +307,23 @@
     function re_confirmMemBan(x) {
         document.getElementById("darkscreen").style.visibility = "hidden";
         document.getElementById("zgloszeniemem_confirm_Ban" + x).style.visibility = "hidden";
+    }
+
+    function confirmUsunKom(x) {
+        document.getElementById("darkscreen").style.visibility = "visible";
+        document.getElementById("zgloszeniekom_confirm_UsunKom" + x).style.visibility = "visible";
+    }
+    function re_confirmUsunKom(x) {
+        document.getElementById("darkscreen").style.visibility = "hidden";
+        document.getElementById("zgloszeniekom_confirm_UsunKom" + x).style.visibility = "hidden";
+    }
+    function confirmKomBan(x) {
+        document.getElementById("darkscreen").style.visibility = "visible";
+        document.getElementById("zgloszeniekom_confirm_Ban" + x).style.visibility = "visible";
+    }
+    function re_confirmKomBan(x) {
+        document.getElementById("darkscreen").style.visibility = "hidden";
+        document.getElementById("zgloszeniekom_confirm_Ban" + x).style.visibility = "hidden";
     }
     window.onload = memf;
     mem_prz.onclick = memf;
