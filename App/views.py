@@ -55,15 +55,13 @@ def adminActionMem():
             break
     conn = get_db_connection()
     cur = conn.cursor()
-    print(action)
-    print(id)
     if action=="zamknij":
         cur.execute("update zgloszenia_memow set czy_rozpatrzony = true where id_zgloszenia = "+id+";")
         conn.commit()
     if action=="usun":
-        cur.execute("update zgloszenia_memow set czy_rozpatrzony = true where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+";);")
+        cur.execute("update zgloszenia_memow set czy_rozpatrzony = true where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");")
         conn.commit()
-        cur.execute("delete from memy where id_mema = (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+";);")
+        cur.execute("delete from memy where id_mema = (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");")
         conn.commit()
     if action=="ban":
         ban_duration = request.form["banDuration"];
@@ -89,7 +87,20 @@ def adminActionKom():
     cur = conn.cursor()
     if action=="zamknij":
         cur.execute("update zgloszenia_komentarzy set czy_rozpatrzony = true where id_zgloszenia = "+id+";")
-        conn.commit()      
+        conn.commit()
+    if action=="usun":
+        cur.execute("update zgloszenia_komentarzy set czy_rozpatrzony = true where komentarze_id_komentarza in (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")
+        conn.commit()
+        cur.execute("delete from komentarze where id_komentarza = (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")
+        conn.commit()
+    if action=="ban":
+        ban_duration = request.form["banDuration"];
+        ban_reason ="'"+request.form["banReason"]+"'"
+        ban_enddate = "CURRENT_DATE"+" + "+ban_duration
+        cur.execute("update zgloszenia_komentarzy set czy_rozpatrzony = true where id_zgloszenia = "+id+";")
+        conn.commit()
+        cur.execute("insert into blokady values (default,CURRENT_DATE,"+ban_enddate+","+ban_reason+","+id+");")
+        conn.commit()
     cur.close()
     conn.close()
     return redirect("/admin")
