@@ -108,27 +108,36 @@
             margin:9px;
             width:200px;
         }
-        #darkscreen
-        {
-            width:100%;
-            height:100%;
-            margin:0;
-            background-color:black;
-            position:fixed;
-            z-index:100;
-            opacity:0.5;
-            visibility:hidden;
+        .zgloszeniekom_akcje button {
+            margin: 18px;
+            width: 200px;
         }
-        .zgloszeniemem_confirm
+        #darkscreen {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background-color: black;
+            position: fixed;
+            z-index: 100;
+            opacity: 0.5;
+            visibility: hidden;
+        }
+        .zgloszenie_confirm {
+            visibility: hidden;
+            position: fixed;
+            top: 25%;
+            left: 30%;
+            z-index: 200;
+            width: 40%;
+            height: 18%;
+            background-color: white;
+            padding-top:40px;
+            padding-bottom:20px;
+        }
+        .confirm_button
         {
-            visibility:hidden;
-            position:fixed;
-            top:25%;
-            left:35%;
-            z-index:200;
-            width:30%;
-            height:20%;
-            background-color:white;
+            width:80px;
+            margin:0 10px 0 10px;
         }
     </style>
 </head>
@@ -136,11 +145,11 @@
 <body>
     <div id="darkscreen"></div>
     <div id="container">
-        
+
         <div id="przycisk_zgloszenia_mem" style="border-left:1px solid black">Zgłoszenia memów</div>
         <div id="przycisk_zgloszenia_kom" style="border-right:1px solid black">Zgłoszenia komentarzy</div>
         {% block content %}
-        <form action="adminAction" method="post">
+        <form action="adminActionMem" method="post">
             <!--0 - id, 1-powód, 2-obraz, 3-status, 4-idmema, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-wstawiajacyid, 9-wstawiajacy -->
             <div id="zgloszenia_mem">
                 {% for i in range(n_zgl_mem) %}
@@ -156,19 +165,34 @@
                     <div class="zgloszeniemem_obraz">
                         <img src="{{zgloszeniamem[i][2]}}">
                     </div>
-                    <div class="zgloszeniemem_confirm" id="zgloszeniemem_confirm_{{id_zgl_mem[i]}}">
+                    <div class="zgloszenie_confirm" id="zgloszeniemem_confirm_UsunMem{{id_zgl_mem[i]}}">
 
-                        {{id_zgl_mem[i]}}
+                        <p>Czy na pewno chcesz usunąć tego mema (zgłoszenie nr: {{id_zgl_mem[i]}}) i rozpatrzeć inne powiązane zgłoszenia?</p>
+                        <button class="confirm_button" type="submit" name="action" value="usun{{id_zgl_mem[i]}}">Tak</button>
+                        <button class="confirm_button" onclick="re_confirmUsunMem({{id_zgl_mem[i]}})" type="button">Nie</button>
+                    </div>
+                    <div class="zgloszenie_confirm" id="zgloszeniemem_confirm_Ban{{id_zgl_mem[i]}}">
 
+                        <p>Czy na pewno chcesz zablokować autora tego mema (zgłoszenie nr: {{id_zgl_mem[i]}})?</p>
+                        <select name="banDuration">
+                            <option value="7" selected="selected">Tydzień</option>
+                            <option value="30">Miesiąc</option>
+                            <option value="365">Rok</option>
+                        </select>
+                        <input type="text" value="na podstawie zgłoszenia /admin" name="banReason"/>
+                        <button class="confirm_button" type="submit" name="action" value="ban{{id_zgl_mem[i]}}">Tak</button>
+                        <button class="confirm_button" onclick="re_confirmMemBan({{id_zgl_mem[i]}})" type="button">Nie</button>
                     </div>
                     <div class="zgloszeniemem_akcje">
-                        <button onclick="confirm({{id_zgl_mem[i]}})">Usuń mema</button><br />
-                        <button>Zablokuj użytkownika</button><br />
-                        <button class="mem_zamknij" type="submit" value="{{id_zgl_mem[i]}}" name="mem_zamknij"">Zamknij zgłoszenie</button><br />
+                        <button onclick="confirmUsunMem({{id_zgl_mem[i]}})" type="button">Usuń mema</button><br />
+                        <button onclick="confirmMemBan({{id_zgl_mem[i]}})" type="button">Zablokuj użytkownika</button><br />
+                        <button class="mem_zamknij" type="submit" value="zamknij{{id_zgl_mem[i]}}" name="action">Zamknij zgłoszenie</button><br />
                     </div>
                 </div>
                 {% endfor %}
             </div>
+        </form>
+        <form action="adminActionKom" method="post">
             <!--0 - id, 1-powód, 2-treść, 3-status, 4-idkom, 5-idzglaszajacego, 6-zglaszajacy 7-data, 8-idkomentujacego, 9-komentujacy -->
             <div id="zgloszenia_kom">
                 {% for i in range(n_zgl_kom) %}
@@ -182,13 +206,15 @@
                         <span class="zgloszenie_property">treść komentarza: </span>{{zgloszeniakom[i][2]}} <br />
                     </div>
                     <div class="zgloszeniekom_akcje">
-                        placeholder
+                        <button onclick="confirmUsunKom({{id_zgl_kom[i]}})">Usuń komentarz</button><br />
+                        <button>Zablokuj użytkownika</button><br />
+                        <button class="kom_zamknij" type="submit" value="zamknij{{id_zgl_kom[i]}}" name="zamknij">Zamknij zgłoszenie</button><br />
                     </div>
                 </div>
                 {% endfor %}
             </div>
-        </form>
-        {% endblock %}
+            </form>
+            {% endblock %}
     </div>
 
 </body>
@@ -212,9 +238,21 @@
         kom.style.visibility = "visible";
         mem.style.visibility = "hidden";
     };
-    function confirm(x) {
+    function confirmUsunMem(x) {
         document.getElementById("darkscreen").style.visibility = "visible";
-        document.getElementById("zgloszeniemem_confirm_" + x).style.visibility = "visible";
+        document.getElementById("zgloszeniemem_confirm_UsunMem" + x).style.visibility = "visible";
+    }
+    function re_confirmUsunMem(x) {
+        document.getElementById("darkscreen").style.visibility = "hidden";
+        document.getElementById("zgloszeniemem_confirm_Ban" + x).style.visibility = "hidden";
+    }
+    function confirmMemBan(x) {
+        document.getElementById("darkscreen").style.visibility = "visible";
+        document.getElementById("zgloszeniemem_confirm_Ban" + x).style.visibility = "visible";
+    }
+    function re_confirmMemBan(x) {
+        document.getElementById("darkscreen").style.visibility = "hidden";
+        document.getElementById("zgloszeniemem_confirm_Ban" + x).style.visibility = "hidden";
     }
     window.onload = memf;
     mem_prz.onclick = memf;
