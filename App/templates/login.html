@@ -172,8 +172,8 @@
 
                 <div class="header">
 
-                    <h3>Sign in</h3>
-
+                    <h3><a href="{{ url_for('register') }}">Sign in </a></h3>
+                    {{ form.hidden_tag() }}
 
 
                 </div>
@@ -187,15 +187,21 @@
 
 
 
-                    <input type="email" placeholder="Login" autofocus value="{{request.form.username }}" />
+                    <input type="email" {{ form.email(placeholder="email"}} autofocus />
+                    {% for error in form.email.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
 
-                    <input type="password" placeholder="Password" value="{{request.form.username }}" />
+                    <input type="password" {{ form.password(placeholder="password"}} />
+                    {% for error in form.password.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
 
                     <a id="reset" href="http://127.0.0.1:5000/emailCheck">Forgot your password?</a>
 
                     <a id="reset" href="http://127.0.0.1:5000/register">Create account</a>
 
-                    <a id="submit" href="#">Sign in</a>
+                    <a id="submit" {{ form.submit()}}>Sign in</a>
 
 
 
