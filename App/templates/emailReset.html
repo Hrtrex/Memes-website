@@ -137,22 +137,20 @@
 
             <div class="header">
 
-                <h3>Password sending...</h3>
+                <h3>Change your email</h3>
 
             </div>
 
             <div class="sep"></div>
 
-                <p>Click "Confirm" to send an email</p>
-
-                <form action="/emailCheck" method="POST">
-
-                    <input type="text" name="server" placeholder="Mail server(stp.#######)" autofocus required>
-                    <input type="text" name="email" placeholder="E-mail" required>
 
 
-                    <input id="submit" type="submit" href="" value="Confirm">
-                </form>
+            <form action="/emailReset" method="POST">
+                <input type="text" name="email" placeholder="E-mail" autofocus required>
+                <input type="text" name="new_email" placeholder="New e-mail" required>
+                <input type="text" name="new_email2" placeholder="Confirm new e-mail" required>
+                <input id="submit" type="submit" href="http://127.0.0.1:5000" value="Confirm">
+            </form>
 
         </div>
 
