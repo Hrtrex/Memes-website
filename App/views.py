@@ -125,10 +125,10 @@ def adminActionMem():
         cur.execute("update zgloszenia_memow set czy_rozpatrzony = true where id_zgloszenia = "+id+";")
         conn.commit()
     if action=="usun":
-        cur.execute("delete from oceny_komentarzy where komentarze_id_komentarza in (select id_komentarza from komentarze where memy_id_mema = (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+"));"
-        cur.execute("delete from komentarze where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");"
-        cur.execute("delete from oceny_memow where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");"
-        cur.execute("delete from zgloszenia_memow where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");"
+        cur.execute("delete from oceny_komentarzy where komentarze_id_komentarza in (select id_komentarza from komentarze where memy_id_mema = (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+"));")
+        cur.execute("delete from komentarze where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");")
+        cur.execute("delete from oceny_memow where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");")
+        cur.execute("delete from zgloszenia_memow where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");")
         cur.execute("delete from memy where id_mema = (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");")
         conn.commit()
     if action=="ban":
@@ -164,7 +164,7 @@ def adminActionKom():
     if action=="usun":
         cur.execute("delete from oceny_komentarzy where komentarze_id_komentarza = (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")
         cur.execute("delete from komentarze where id_komentarza = (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")
-        cur.execute("delete from zgloszenia_komentarzy where komentarze_id_komentarza = (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")= ")
+        cur.execute("delete from zgloszenia_komentarzy where komentarze_id_komentarza = (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")
         conn.commit()
     if action=="ban":
         ban_duration = request.form["banDuration"];
