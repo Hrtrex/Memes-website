@@ -8,7 +8,7 @@ from datetime import date, datetime
 from argparse import Namespace
 from flask_login import LoginManager, FlaskLoginClient, login_user, logout_user, current_user, login_required
 from flask_mail import Mail, Message
-
+from App.memes import Meme
 
 
 def get_db_connection():
@@ -200,18 +200,40 @@ def jbzd(page):
     meme_data.get_memes_jbzd(f'{page}')
     return render_template("memy.html", memes = meme_data)
 
+#MEMES
+@app.route("/jbzd/", defaults={'page': ''})
+@app.route("/jbzd/<page>")
+def jbzd(page):
+    meme_data = Meme()
+    meme_data.get_memes_jbzd(f'{page}')
+    return render_template("memy.html", memes = meme_data)
+
 @app.route("/kwejk/", defaults={'page': ''})
 @app.route("/kwejk/<page>")
 def kwejk(page):
-    urls, votes = get_urls_kwejk(page)
-    data = list(zip(urls, votes))
-    return render_template("memy.html", links=data)
+    meme_data = Meme()
+    meme_data.get_memes_kwejk(f'{page}')
+    return render_template("memy.html", memes = meme_data)
 
-
-
-
-
-
+@app.route("/upload", methods=['GET', 'POST'])
+def upload_meme():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return 'No meme uploaded', 400
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute("insert into memy values (default, %s, '2022-06-18', 1, 'tytul', 'opis', 'kategoria')", (filename,))
+            conn.commit()
+            cur.close()
+            conn.close()
+            return 'Meme has been uploaded', 200
+    return render_template("test.html")
 
 #REJESTRACJA
 @app.route('/register', methods = ['POST', 'GET'])
