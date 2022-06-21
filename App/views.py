@@ -13,20 +13,12 @@ from App.memes import Meme
 import os
 
 
-#def get_db_connection():
-#    conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
-#                            database='db',
-#                            user='hrtrex',
-#                            password='Haslo_db',
-#                            sslmode='require')
-#    return conn
-
 def get_db_connection():
-    conn = psycopg2.connect(host='localhost',
-                            database='postgres',
-                            user='postgres',
-                            password='jebacdisa1')
-                            
+    conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
+                            database='db',
+                            user='hrtrex',
+                            password='Haslo_db',
+                            sslmode='require')
     return conn
 
 @app.route('/memesRanking/sorted/', methods=['POST'])
