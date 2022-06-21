@@ -13,7 +13,7 @@ def get_db_connection():
     conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
                             database='db',
                             user='hrtrex',
-                            password='Jebacdisa_12',
+                            password='Haslo_db',
                             sslmode='require')
     return conn
 
