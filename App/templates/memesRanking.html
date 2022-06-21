@@ -1,12 +1,62 @@
 {% extends 'index.html' %}
  {% block content %}
-<h1>{% block title %}Ranking memow{% endblock %}</h1>
+
+<h1 class="text-center">{% block title %}Ranking memow{% endblock %}</h1>
+<form action="{{ url_for('zastosuj_filtry') }}" method="post">
+	<table>
+		<tr>
+		<td>
+			<p>Rodzaj sortowania:</p>
+			<input type="radio" id="asc" name="sort" value="asc">
+			<label for="sasc">Rosnaco</label><br>
+			<input type="radio" id="desc" name="sort" value="desc" checked="checked">
+			<label for="sdesc">Malejaco</label><br>
+		</td>
+		<td>
+			<p>Sortuj po:</p>
+			<input type="radio" id="byrates" name="sorttyp" value="oceny" checked="checked">
+			<label for="oceny">Oceny</label><br>
+			<input type="radio" id="bycom" name="sorttyp" value="komentarze">
+			<label for="komentarze">Ilosc komentarzy</label>
+		</td>
+		<td>
+			<p class="align-top">Filtruj wg kategorii:</p>
+			<select name="kat">
+				<option value="Wszystkie">Wszystkie</option>
+				{% for kategoria in kategorie %}
+				<option value="{{kategoria}}">{{kategoria}}</option>
+				{% endfor %}
+			</select>
+		</td>
+			<tr>
+	</table>
+
+	<input type="submit" value="Zastosuj" />
+
+
+
+</form> 
+
 	{% for mem in memy %}
-	<h3>Id mema: {{mem[0]}}</h3>
-	<h3>Tytul mema: {{mem[1]}}</h3>
-	<h3>Srednia ocena: {{mem[3]}}</h3>
-	<h3>Kategoria mema: {{mem[2]}}</h3>
-	<hr></hr>
+<div class="d-flex justify-content-center my-5">
+	<table class="table table-bordered text-secondary">
+		<tr>
+			<td>| Tytul mema: {{mem[1]}}   </td>
+			<td>| {{ok}} {{mem[4]}}   </td>
+			<td>| Kategoria mema: {{mem[3]}}</td>
+			</tr>
+	</table>
+</div>
+
+
+<div class="d-flex justify-content-center">
+	<img src="{{mem[2]}}" />
+
+</div>
+<div class="w-75 mx-auto">
+<p class="mb-5 d-flex justify-content-center">{{mem[5]}}</p>
+</div>
+<hr>
 	{% endfor %}
 	{% endblock %}
 
