@@ -3,12 +3,13 @@ from App import app
 import psycopg2
 import psycopg2.extras
 from werkzeug.security import generate_password_hash, check_password_hash
-from App.memes import get_urls_jbzd, get_urls_kwejk
+from werkzeug.utils import secure_filename
 from datetime import date, datetime
 from argparse import Namespace
 from flask_login import LoginManager, FlaskLoginClient, login_user, logout_user, current_user, login_required
 from flask_mail import Mail, Message
 from App.memes import Meme
+import os
 
 
 def get_db_connection():
