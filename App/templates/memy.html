@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 {% block content %}
 
-    {% for link in links %}
+    {% for i in range(memes.length) %}
 <head>
     <style>
 
@@ -91,7 +91,7 @@
     </style>
 </head>
         <meta charset="utf-8">
-        <img src="{{link[0]}}" class="d-block mx-auto">
+        <img src="{{memes.image[i]}}" class="d-block mx-auto">
         <div>
             {% block comments %}
 

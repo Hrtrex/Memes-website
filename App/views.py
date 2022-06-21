@@ -1,3 +1,4 @@
+from time import sleep
 from flask import Flask, redirect, url_for, render_template, request, flash, session, jsonify
 from App import app
 import psycopg2
@@ -12,12 +13,20 @@ from App.memes import Meme
 import os
 
 
+#def get_db_connection():
+#    conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
+#                            database='db',
+#                            user='hrtrex',
+#                            password='Haslo_db',
+#                            sslmode='require')
+#    return conn
+
 def get_db_connection():
-    conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
-                            database='db',
-                            user='hrtrex',
-                            password='Haslo_db',
-                            sslmode='require')
+    conn = psycopg2.connect(host='localhost',
+                            database='postgres',
+                            user='postgres',
+                            password='jebacdisa1')
+                            
     return conn
 
 @app.route('/memesRanking/sorted/', methods=['POST'])
@@ -194,20 +203,27 @@ def adminActionKom():
     conn.close()
     return redirect("/admin")
 
-@app.route("/jbzd/", defaults={'page': ''})
-@app.route("/jbzd/<page>")
-def jbzd(page):
-    meme_data = Meme()
-    meme_data.get_memes_jbzd(f'{page}')
-    return render_template("memy.html", memes = meme_data)
-
 #MEMES
+UPLOAD_FOLDER = 'App/static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route("/jbzd/", defaults={'page': ''})
 @app.route("/jbzd/<page>")
-def jbzd(page):
+def jbzd():
     meme_data = Meme()
-    meme_data.get_memes_jbzd(f'{page}')
-    return render_template("memy.html", memes = meme_data)
+    #meme_data.get_memes_jbzd(f'{page}')
+    meme_data.get_memes_jbzd('1')
+    meme_data.get_memes_jbzd('2')
+    meme_data.get_memes_jbzd('3')
+    meme_data.get_memes_kwejk('1')
+    meme_data.get_memes_kwejk('2')
+    meme_data.get_memes_kwejk('3')
+    return meme_data
+    #return render_template("memy.html", memes = meme_data)
 
 @app.route("/kwejk/", defaults={'page': ''})
 @app.route("/kwejk/<page>")
@@ -222,6 +238,9 @@ def upload_meme():
         if 'file' not in request.files:
             return 'No meme uploaded', 400
         file = request.files['file']
+        title = request.form['tytul']
+        description = request.form['opis']
+        category = request.form['kategoria']
         if file.filename == '':
             return redirect(request.url)
         if file and allowed_file(file.filename):
@@ -229,11 +248,11 @@ def upload_meme():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             conn = get_db_connection()
             cur = conn.cursor()
-            cur.execute("insert into memy values (default, %s, '2022-06-18', 1, 'tytul', 'opis', 'kategoria')", (filename,))
+            cur.execute("insert into memy values (default, %s, current_date, 1, %s, %s, %s)", (filename, title, description, category))
             conn.commit()
             cur.close()
             conn.close()
-            return 'Meme has been uploaded', 200
+            return redirect("/")
     return render_template("test.html")
 
 #REJESTRACJA
