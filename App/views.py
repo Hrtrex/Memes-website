@@ -2,13 +2,13 @@ from flask import Flask, redirect, url_for, render_template, request, flash, ses
 from App import app
 import psycopg2
 import psycopg2.extras
-import re
-import werkzeug
+#import re
+#import werkzeug
 from werkzeug.security import generate_password_hash, check_password_hash
 from App.memes import get_urls_jbzd, get_urls_kwejk
 from datetime import date, datetime
-import random
-import os
+#import random
+#import os
 from argparse import Namespace
 from flask_login import LoginManager, FlaskLoginClient, login_user, logout_user, current_user, login_required
 import json
@@ -20,7 +20,7 @@ def get_db_connection():
     conn = psycopg2.connect(host='flask-server.postgres.database.azure.com',
                             database='db',
                             user='hrtrex',
-                            password='Jebacdisa_12',
+                            password='Haslo_db',
                             sslmode='require')
     return conn
 
@@ -145,7 +145,9 @@ def profile():
         cur = conn.cursor()
         
         global email
-        
+        if 'loggedin' not in session:
+            return redirect(url_for('login'))
+
         
         cur.execute('SELECT * FROM uzytkownicy WHERE email = %s', (email,));
         account = cur.fetchone()
@@ -162,7 +164,7 @@ def profile():
 
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     
     
@@ -208,11 +210,14 @@ def login():
 
 
 @app.route('/logout')
-def logout():
+def logout():    
+   if 'loggedin' not in session:
+            return redirect('/')
    session.pop('loggedin', None)
    session.pop('id', None)
    session.pop('email', None)
-
+   global email
+   del email
    return redirect(url_for('login'))
 
 

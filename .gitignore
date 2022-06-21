@@ -366,3 +366,5 @@ MigrationBackup/
 FodyWeavers.xsd
 .vscode/settings.json
 postgresql/query.sql
+.vscode/launch.json
+flask-server.session.sql
