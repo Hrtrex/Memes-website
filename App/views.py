@@ -71,7 +71,23 @@ def domyslne_filtry():
     conn.close()
     return render_template('memesRanking.html', memy=memy, kategorie=kategorie,sorttyp=sorttyp, ok=ok)
 
-
+@app.route("/komentarze")
+def komentarze():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('select * from memy;')
+    memy = cur.fetchall()
+    cur.execute('select * from komentarze where komentarze_id_komentarza is null;')
+    komentarze=cur.fetchall()
+    cur.execute('select * from komentarze where komentarze_id_komentarza is not null')
+    odpowiedzi=cur.fetchall()
+    cur.execute('select komentarze.id_komentarza,(dodatnie.plusy) as fajny, (ujemne.minusy) as nieladny from komentarze, (select komentarze_id_komentarza,sum(jaka_ocena) as plusy from oceny_komentarzy group by komentarze_id_komentarza) as dodatnie, (select komentarze_id_komentarza,count(jaka_ocena) as minusy from oceny_komentarzy where jaka_ocena=0 group by komentarze_id_komentarza) as ujemne where komentarze.id_komentarza=dodatnie.komentarze_id_komentarza and komentarze.id_komentarza = ujemne.komentarze_id_komentarza;')
+    oceny=cur.fetchall()
+    cur.execute('select komentarze_id_komentarza, count(komentarze_id_komentarza) as ilosc from komentarze where komentarze_id_komentarza is not null group by komentarze_id_komentarza;')
+    ileodp=cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp)
 
 @app.route("/")
 def home():
