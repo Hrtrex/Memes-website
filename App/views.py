@@ -17,6 +17,7 @@ def get_db_connection():
                             user='hrtrex',
                             password='Haslo_db',
                             sslmode='require')
+                            
     return conn
 
 @app.route('/memesRanking/sorted/', methods=['POST'])
