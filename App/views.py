@@ -97,8 +97,23 @@ def komentarze():
     ileodp=cur.fetchall()
     cur.close()
     conn.close()
+    if 'id' in session:
+     return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,user=session['id'])
     return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp)
 
+@app.route("/wstawkomentarz",methods=['POST'])
+def wstawkom():
+    if 'loggedin' not in session:
+        return redirect("/komentarze")    
+    conn = get_db_connection()
+    cur = conn.cursor()
+    
+    idmema = request.form["wstaw komentarz"]
+    tresc=request.form["message"]
+    cur.execute("insert into komentarze values(default,'"+ tresc+"',current_date,"+str(session['id'])+","+idmema +",null );")
+    conn.commit()
+    return redirect("/komentarze")
+   
 @app.route("/")
 def home():
     if 'loggedin' in session:
@@ -379,7 +394,7 @@ def login():
                 session['id'] = account[0]
                 session['email'] = account[3]
                 session['type'] = account[4]
-                return render_template("index.html",email=email)
+                return render_template("index.html",email=email,id=id)
 
                 
                 

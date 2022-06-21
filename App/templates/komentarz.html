@@ -16,24 +16,25 @@
 
         .glownykom {
             padding: 20px;
+            margin-top:50px;
             background-color: #2e2e2e;
             border: 1px solid rgb(0 0 0);
             border-radius: .5rem;
             min-width: 100%;
+            color:white;
             box-shadow: 0 0 4px rgb(255 255 255);
         }
-        .comment_card h3, .comment_card p {
-            margin-bottom: 1rem;
-            }
+
         .odpowiedz {
-            margin-top:25px;
             margin-left: 100px;
+            margin-top:20px;
             padding: 20px;
             background-color: #2e2e2e;
             border: 1px solid rgb(0 0 0);
             border-radius: .5rem;
             min-width: 80%;
             box-shadow: 0 0 4px rgb(255 255 255);
+            color:white;
         }
 
         .stopka {
@@ -65,6 +66,7 @@
             font-size: var(--bs-body-font-size);
             font-weight: var(--bs-body-font-weight);
             line-height: var(--bs-body-line-height);
+            color:white;
         }
 
 
@@ -75,12 +77,12 @@
             border: 1px solid rgb(0 0 0);
             border-radius: .5rem;
             box-shadow: 0 0 4px rgb(255 255 255);
-            margin-top: 10px;
             margin-left: 80%;
             font-size: 1rem;
             font-weight: 400;
             line-height: 1.5;
             color: #9e9e9e;
+            margin-top:5px;
         }
 
         .pokaz_odp {
@@ -92,19 +94,16 @@
     {% for mem in memy %}
     <img src="{{mem[1]}}" class="d-block mx-auto">
     <div>
-
         <div class="dodawanie">
             <div class="we">
-                <form action="" method="post" class="form">
-                    <br>
+                <form  action="wstawkomentarz" method="post" class="form">
+                    
                     <textarea name="message" cols="30" rows="10" class="oknotekstowe" placeholder="Wpisz treść komentarza" style="resize: none"></textarea>
-                    <button type="submit" class="przyciskdodaj">Dodaj Komentarz</button>
+                    <button name="wstaw komentarz" type="submit" value="{{mem[0]}}" class="przyciskdodaj">Dodaj Komentarz</button>
                 </form>
             </div>
         </div>
         {% for komentarz in komentarze %}
-
-        <br />
         {%if mem[0]==komentarz[4]%}
         <div class="watek">
             <div class="glownykom">
@@ -122,13 +121,9 @@
                     {%if komentarz[0]==ile[0]%}
                     <div class="pokaz_odp">Odpowiedzi {{ile[1]}}</div>
                     {%endif%}
-                    {%endfor%}
-
-
-
+                    {%endfor}
                 </div>
             </div>
-
             {%for odpowiedz in odpowiedzi%}
             {%if odpowiedz[5]==komentarz[0]%}
             <div>
@@ -151,19 +146,13 @@
                     </div>
                 </div>
             </div>
-
-
             {%endif%}
-
             {%endfor%}
-
         </div>
         {%endif%}
         {%endfor%}
     </div>
-    <br>
-    
     {% endfor %}
 </body>
-    
+   
 {% endblock %}

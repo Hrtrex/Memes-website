@@ -16,7 +16,7 @@
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
     <Name>usmiechnij-sie</Name>
     <RootNamespace>usmiechnij-sie</RootNamespace>
-    <InterpreterId>MSBuild|env1|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,15 +27,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="App\memes.py" />
     <Compile Include="App\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="App\views.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="runserver.py" />
+    <Compile Include="App\views.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App\templates\admin.html" />
     <Content Include="App\templates\emailCheck.html">
       <SubType>Code</SubType>
     </Content>
@@ -47,6 +47,8 @@
     </Content>
     <Content Include="App\templates\index.html" />
     <Content Include="App\templates\login.html" />
+    <Content Include="App\templates\memesRanking.html" />
+    <Content Include="App\templates\memy.html" />
     <Content Include="App\templates\passwordReset.html">
       <SubType>Code</SubType>
     </Content>
@@ -59,6 +61,7 @@
     <Content Include="App\templates\userPanel.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="App\templates\komentarz.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
