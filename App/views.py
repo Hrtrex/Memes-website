@@ -85,6 +85,12 @@ def user(name):
 
 @app.route("/admin")
 def getZgloszenia():
+
+    if 'loggedin' not in session:
+            return redirect('/')
+    if session['type'] !=2:
+            return redirect('/')
+
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute('select id_zgloszenia,zgloszenia_komentarzy.tresc as powod,komentarze.tresc as komentarz,czy_rozpatrzony,zgloszenia_komentarzy.komentarze_id_komentarza,zgloszenia_komentarzy.uzytkownicy_id_uzytkownika as zglaszajacyid,zgl.login as zglaszajacy,data_dodania,komentarze.uzytkownicy_id_uzytkownika as komentujacyid,kom.login as komentujacy from zgloszenia_komentarzy, komentarze,(select id_uzytkownika, login from uzytkownicy) zgl,(select id_uzytkownika,login from uzytkownicy) kom where czy_rozpatrzony=false and zgloszenia_komentarzy.uzytkownicy_id_uzytkownika = zgl.id_uzytkownika and  komentarze.uzytkownicy_id_uzytkownika = kom.id_uzytkownika and zgloszenia_komentarzy.komentarze_id_komentarza = komentarze.id_komentarza order by data_dodania desc;')
@@ -101,6 +107,12 @@ def getZgloszenia():
 
 @app.route("/adminActionMem", methods=['POST'])
 def adminActionMem():
+
+    if 'loggedin' not in session:
+            return redirect('/')
+    if session['type'] !=2:
+            return redirect('/')
+
     action_request = request.form["action"]
     for i in range(len(action_request)):
         if action_request[i].isdigit() == True:
@@ -113,8 +125,10 @@ def adminActionMem():
         cur.execute("update zgloszenia_memow set czy_rozpatrzony = true where id_zgloszenia = "+id+";")
         conn.commit()
     if action=="usun":
-        cur.execute("update zgloszenia_memow set czy_rozpatrzony = true where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");")
-        conn.commit()
+        cur.execute("delete from oceny_komentarzy where komentarze_id_komentarza in (select id_komentarza from komentarze where memy_id_mema = (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+"));"
+        cur.execute("delete from komentarze where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");"
+        cur.execute("delete from oceny_memow where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");"
+        cur.execute("delete from zgloszenia_memow where memy_id_mema in (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");"
         cur.execute("delete from memy where id_mema = (select memy_id_mema from zgloszenia_memow where id_zgloszenia ="+id+");")
         conn.commit()
     if action=="ban":
@@ -122,7 +136,6 @@ def adminActionMem():
         ban_reason ="'"+request.form["banReason"]+"'"
         ban_enddate = "CURRENT_DATE"+" + "+ban_duration
         cur.execute("update zgloszenia_memow set czy_rozpatrzony = true where id_zgloszenia = "+id+";")
-        conn.commit()
         cur.execute("insert into blokady values (default,CURRENT_DATE,"+ban_enddate+","+ban_reason+","+id+");")
         conn.commit()
     cur.close()
@@ -131,6 +144,12 @@ def adminActionMem():
 
 @app.route("/adminActionKom", methods=['POST'])
 def adminActionKom():
+
+    if 'loggedin' not in session:
+            return redirect('/')
+    if session['type']!=2:
+            return redirect('/')
+
     action_request = request.form["action"]
     for i in range(len(action_request)):
         if action_request[i].isdigit() == True:
@@ -143,16 +162,15 @@ def adminActionKom():
         cur.execute("update zgloszenia_komentarzy set czy_rozpatrzony = true where id_zgloszenia = "+id+";")
         conn.commit()
     if action=="usun":
-        cur.execute("update zgloszenia_komentarzy set czy_rozpatrzony = true where komentarze_id_komentarza in (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")
-        conn.commit()
+        cur.execute("delete from oceny_komentarzy where komentarze_id_komentarza = (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")
         cur.execute("delete from komentarze where id_komentarza = (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")
+        cur.execute("delete from zgloszenia_komentarzy where komentarze_id_komentarza = (select komentarze_id_komentarza from zgloszenia_komentarzy where id_zgloszenia ="+id+");")= ")
         conn.commit()
     if action=="ban":
         ban_duration = request.form["banDuration"];
         ban_reason ="'"+request.form["banReason"]+"'"
         ban_enddate = "CURRENT_DATE"+" + "+ban_duration
         cur.execute("update zgloszenia_komentarzy set czy_rozpatrzony = true where id_zgloszenia = "+id+";")
-        conn.commit()
         cur.execute("insert into blokady values (default,CURRENT_DATE,"+ban_enddate+","+ban_reason+","+id+");")
         conn.commit()
     cur.close()
@@ -302,7 +320,7 @@ def login():
                 session['loggedin'] = True
                 session['id'] = account[0]
                 session['email'] = account[3]
-                
+                session['type'] = account[4]
                 return render_template("index.html",email=email)
 
                 
