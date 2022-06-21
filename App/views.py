@@ -211,9 +211,9 @@ def adminActionKom():
 @app.route("/jbzd/", defaults={'page': ''})
 @app.route("/jbzd/<page>")
 def jbzd(page):
-    urls, votes = get_urls_jbzd(page)
-    data = list(zip(urls, votes))
-    return render_template("memy.html", links=data)
+    meme_data = Meme()
+    meme_data.get_memes_jbzd(f'{page}')
+    return render_template("memy.html", memes = meme_data)
 
 @app.route("/kwejk/", defaults={'page': ''})
 @app.route("/kwejk/<page>")
