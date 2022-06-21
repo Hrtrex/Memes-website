@@ -16,7 +16,7 @@
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
     <Name>usmiechnij-sie</Name>
     <RootNamespace>usmiechnij-sie</RootNamespace>
-    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|env1|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,7 +36,29 @@
     <Compile Include="runserver.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App\templates\emailCheck.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="App\templates\emailReset.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="App\templates\flashes.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="App\templates\index.html" />
+    <Content Include="App\templates\login.html" />
+    <Content Include="App\templates\passwordReset.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="App\templates\profile.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="App\templates\register.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="App\templates\userPanel.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +66,15 @@
     <Folder Include="App\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Interpreter Include="env1\">
+      <Id>env1</Id>
+      <Version>3.9</Version>
+      <Description>env1 (Python 3.9 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
     <Interpreter Include="env\">
       <Id>env</Id>
       <Version>3.9</Version>
