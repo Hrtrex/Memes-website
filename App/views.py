@@ -23,8 +23,8 @@ def get_db_connection():
 def zastosuj_filtry():
     s='desc'
     s = request.form.get('sort')
-    sorttyp='oceny';
-    sorttyp=request.form.get('sorttyp');
+    sorttyp='oceny'
+    sorttyp=request.form.get('sorttyp')
     if sorttyp=='oceny':
         ok='Srednia ocen: ' 
     else:
