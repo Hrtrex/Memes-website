@@ -1,8 +1,9 @@
 {% extends 'index.html' %}
 {% block content %}
     {{memes.length}}
-    {% for image in memes.image %}
-        <img src="{{image}}" class="d-block mx-auto" >
+    {% for i in range(memes.length) %}
+        <img src="{{memes.image[i]}}" class="d-block mx-auto" >
+        {{memes.plus[i]}}
         <br>
     {% endfor %}
     
