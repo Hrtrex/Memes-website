@@ -128,9 +128,9 @@ def komentarze():
         ileodp=cur.fetchall()
         cur.close()
         conn.close()
-        if 'id' in session:
-            return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,user=session['id'])
-        return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp)
+    if 'id' in session:
+        return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,user=session['id'])
+    return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp)
 
 @app.route("/wstawkomentarz",methods=['POST'])
 def wstawkom():
@@ -140,27 +140,21 @@ def wstawkom():
     cur = conn.cursor()
     idmema = request.form["wstaw komentarz"]
     tresc=request.form["message"]
-    idkom=request.form["usn"]
-   
-    #if action=="wstawkomentarz":
-        
     cur.execute("insert into komentarze values(default,'"+ tresc+"',current_date,"+str(session['id'])+","+idmema +",NULL );")
     conn.commit()
-    #if action=="usun":
-        
-    cur.execute("delete from komentarze where komentarze.id_komentarza='"+idkom+"';")
     conn.commit()
     cur.close()
     conn.close()
     return redirect("/komentarze")
 
-@app.route("/usunkomentarz", methods=['POST', 'GET'])
+@app.route("/usunkomentarz", methods=['POST'])
 def usunkom():
     if 'loggedin' not in session:
         return redirect("/komentarze")
     komentarz = request.form['usn']
     conn = get_db_connection()
     cur = conn.cursor()
+    #cur.execute("delete from komentarze where komentarze.id_komentarza='"+idkom+"';")
     cur.execute(f"delete from komentarze where komentarze.id_komentarza={komentarz}")
     conn.commit()
     cur.close()
