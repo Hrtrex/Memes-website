@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+ {% block content %}
+
+<h1 class="text-center">{% block title %}Ranking uzytkownikow{% endblock %}</h1>
+<form action="{{ url_for('zastosuj_filtry_uzytkownikow') }}" method="post">
+	<table>
+		<tr>
+		<td>
+			<p>Rodzaj sortowania   |   </p>
+			<input type="radio" id="asc" name="usort" value="asc">
+			<label for="usasc">Najgorsi</label><br>
+			<input type="radio" id="desc" name="usort" value="desc" checked="checked">
+			<label for="usdesc">Najlepsi</label><br>
+		</td>
+		<td>
+			<p>Sortuj po</p>
+			<input type="radio" id="ubyrates" name="usorttyp" value="oceny" checked="checked">
+			<label for="uoceny">Oceny</label><br>
+			<input type="radio" id="ubycom" name="usorttyp" value="komentarze">
+			<label for="ukomentarze">Liczba komentarzy</label>
+		</td>
+			<tr>
+	</table>
+
+	<input type="submit" value="Zastosuj" />
+
+
+
+</form> 
+
+
+<div class="d-flex justify-content-center my-5">
+	<table class="table table-bordered text-secondary">
+		<tr><td>Miejsce</td><td>Nazwa uzytkownika</td><td>{{uok}}</td></tr>
+		{% for uzytkownik in uzytkownicy %}
+		<tr>
+			<td>{{uzytkownicy.index(uzytkownik)+1}}</td>
+			<td>{{uzytkownik[1]}}</td>
+			<td>{{uzytkownik[2]}}</td>
+		</tr>
+			{% endfor %}
+		
+	</table>
+</div>
+
+<hr>
+	
+	{% endblock %}
+

@@ -73,6 +73,41 @@ def domyslne_filtry():
     conn.close()
     return render_template('memesRanking.html', memy=memy, kategorie=kategorie,sorttyp=sorttyp, ok=ok)
 
+@app.route('/usersRanking/sorted/', methods=['POST'])
+def zastosuj_filtry_uzytkownikow():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    us='desc'
+    us = request.form.get('usort')
+    usorttyp='oceny'
+    usorttyp=request.form.get('usorttyp')
+    if usorttyp=='oceny':
+        uok='Srednia ocen wyslanych memow: ' 
+    else:
+        uok='Liczba komentarzy'
+    cur.execute('select id_uzytkownika, login, CAST(avg(jaka_ocena) as NUMERIC(10,2)) srednia from oceny_memow,uzytkownicy where oceny_memow.Uzytkownicy_Id_uzytkownika=uzytkownicy.id_uzytkownika group by id_uzytkownika having avg(jaka_ocena) is not null order by srednia '+us+';')
+    if usorttyp=='komentarze':
+        cur.execute('select id_uzytkownika, login, count(id_komentarza) as liczbak from komentarze inner join uzytkownicy on komentarze.Uzytkownicy_Id_uzytkownika=uzytkownicy.id_uzytkownika group by id_uzytkownika having sum(id_komentarza) is not null order by liczbak '+us+';')
+    
+    uzytkownicy = cur.fetchall()
+    cur.close()
+    conn.close()
+    miejsca=[i+1 for i in range(len(uzytkownicy))]
+
+    return render_template('usersRanking.html', uzytkownicy=uzytkownicy,miejsca=miejsca, uok=uok)
+
+@app.route("/usersRanking/") 
+def domyslne_filtry_uzytkownikow():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('select id_uzytkownika, login, CAST(avg(jaka_ocena) as NUMERIC(10,2)) srednia from oceny_memow,uzytkownicy where oceny_memow.Uzytkownicy_Id_uzytkownika=uzytkownicy.id_uzytkownika group by id_uzytkownika having avg(jaka_ocena) is not null order by srednia desc;');
+    uzytkownicy = cur.fetchall()
+    cur.close()
+    conn.close()
+    miejsca=[i+1 for i in range(len(uzytkownicy))]
+    uok='Srednia ocen wyslanych memow: ' 
+    return render_template('usersRanking.html', uzytkownicy=uzytkownicy,miejsca=miejsca)
+
 @app.route("/komentarze")
 def komentarze():
     conn = get_db_connection()
@@ -90,7 +125,7 @@ def komentarze():
     cur.close()
     conn.close()
     if 'id' in session:
-     return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,user=session['id'])
+        return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,user=session['id'])
     return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp)
 
 @app.route("/wstawkomentarz",methods=['POST'])
@@ -336,9 +371,8 @@ def profile():
         global email
         if 'loggedin' not in session:
             return redirect(url_for('login'))
-
         
-        cur.execute('SELECT * FROM uzytkownicy WHERE email = %s', (email,));
+        cur.execute('SELECT * FROM uzytkownicy WHERE email = %s', (email,))
         account = cur.fetchone()
 
         login = account[1]
