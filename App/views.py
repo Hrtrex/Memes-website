@@ -25,8 +25,8 @@ def get_db_connection():
 def zastosuj_filtry_memow():
     s='desc'
     s = request.form.get('sort')
-    sorttyp='oceny';
-    sorttyp=request.form.get('sorttyp');
+    sorttyp='oceny'
+    sorttyp=request.form.get('sorttyp')
     if sorttyp=='oceny':
         ok='Srednia ocen: ' 
     else:
@@ -80,7 +80,7 @@ def zastosuj_filtry_uzytkownikow():
     us='desc'
     us = request.form.get('usort')
     usorttyp='oceny'
-    usorttyp=request.form.get('usorttyp');
+    usorttyp=request.form.get('usorttyp')
     if usorttyp=='oceny':
         uok='Srednia ocen wyslanych memow: ' 
     else:
@@ -110,7 +110,7 @@ def domyslne_filtry_uzytkownikow():
     uok='Srednia ocen wyslanych memow: '
     return render_template('usersRanking.html', uzytkownicy=uzytkownicy,miejsca=miejsca, uok=uok)
 
-
+#@app.route("/", methods=['POST', 'GET'])
 @app.route("/komentarze", methods=['POST', 'GET'])
 def komentarze():
     if request.method == 'GET':
@@ -135,7 +135,7 @@ def komentarze():
 @app.route("/wstawkomentarz",methods=['POST'])
 def wstawkom():
     if 'loggedin' not in session:
-        return redirect("/komentarze")  
+        return redirect("/komentarze") 
     conn = get_db_connection()
     cur = conn.cursor()
     idmema = request.form["wstaw komentarz"]
@@ -166,15 +166,12 @@ def usunkom():
     cur.close()
     conn.close()
     return redirect("/komentarze")
-    #global komentarze
-    #print(komentarze)
-    #print(komentarze[:][3])
 
 @app.route("/")
 def home():
     if 'loggedin' in session:
         return render_template('index.html', email=session['email'])
-    return render_template("index.html")
+    return redirect("/komentarze")
 
 #@app.route("/<name>")
 #def user(name):
@@ -274,7 +271,7 @@ def adminActionKom():
     conn.close()
     return redirect("/admin")
 
-#MEMES
+#MEMESS
 UPLOAD_FOLDER = 'App/static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
@@ -283,8 +280,14 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/jbzd/", defaults={'page': ''})
-@app.route("/jbzd/<page>")
+@app.route("/jbzd/<page>", methods=['POST'])
 def jbzd(page):
+    #if request.method == 'POST':
+    #    if request.form['plus']:
+    #        meme_data.
+    #    elif request.form['minus']:
+    #        vote = request.form['minus']
+        
     meme_data = Meme()
     #meme_data.get_memes_jbzd(f'{page}')
     meme_data.get_memes_jbzd('1')
@@ -295,13 +298,6 @@ def jbzd(page):
     meme_data.get_memes_kwejk('3')
     meme_data.update_database()
     #return meme_data
-    return render_template("memy.html", memes = meme_data)
-
-@app.route("/kwejk/", defaults={'page': ''})
-@app.route("/kwejk/<page>")
-def kwejk(page):
-    meme_data = Meme()
-    meme_data.get_memes_kwejk(f'{page}')
     return render_template("memy.html", memes = meme_data)
 
 @app.route("/upload", methods=['GET', 'POST'])

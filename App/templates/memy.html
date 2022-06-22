@@ -1,7 +1,6 @@
 {% extends 'index.html' %}
 {% block content %}
 
-    {% for i in range(memes.length) %}
 <head>
     <style>
 
@@ -91,7 +90,17 @@
     </style>
 </head>
         <meta charset="utf-8">
+        {% for i in range(memes.length) %}
         <img src="{{memes.image[i]}}" class="d-block mx-auto">
+        <div class="d-flex justify-content-center">
+            {{memes.plus[i]}}
+            <form method="post">
+                <label for="plus">+</label>
+                <input type="button" name="plus">
+                <label for="minus">-</label>
+                <input type="button" name="minus">
+            </form>
+        </div>
         <div>
             {% block comments %}
 

@@ -72,4 +72,4 @@ class Meme:
         #path_of_the_directory =  '/tmp/8da53f03f36c715/App/static/uploads'
         for files in os.listdir(path_of_the_directory):
             self.__image.append('/static/uploads/' + files)
-            print('/static/uploads/' + files)
+            #print('/static/uploads/' + files)
