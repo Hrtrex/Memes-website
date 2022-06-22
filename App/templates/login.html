@@ -1,6 +1,7 @@
 <DOCTYPE html>
     <html>
     <head>
+
         <style>
             body {
                 background-color: #2e2e2e;
@@ -161,10 +162,26 @@
                 background-color: red;
                 color: white;
             }
+            #home {
+                padding: 8px;
+                margin: 5px;
+                border: 2px solid black;
+                cursor: pointer;
+                position: fixed;
+                top: 0;
+                left: 0;
+            }
+
+            #homelink:link, #homelink:visited, #homelink:hover, #homelink:active {
+                color: #b8b9bb;
+            }
         </style>
     </head>
     
     <body>
+
+        <a id="homelink" href="/"><div id="home">Home</div></a>
+
 
         {% for message in get_flashed_messages() %}
         <div class="alert-error">Error: {{ message }}</div>

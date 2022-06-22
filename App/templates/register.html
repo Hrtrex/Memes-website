@@ -56,7 +56,7 @@
                     display: block;
                 }
 
-                .inputs input[type=email], input[type=password], input[type=text], input[type=password2] {
+                .inputs ,input[type=password], input[type=email], input[type=text], input[type=password2] {
                     background: #f5f5f5;
                     font-size: 0.8rem;
                     -moz-border-radius: 3px;
@@ -78,7 +78,7 @@
                 color: #b5b5b5;
             }
 
-            .inputs input[type=email]:focus, input[type=password]:focus, input[type=text]:focus {
+            .inputs ,input[type=password]:focus, input[type=email]:focus, input[type=text]:focus {
                 background: #fff;
                 box-shadow: 0px 0px 0px 3px #fff38e, inset 0px 2px 3px rgba( 0,0,0,0.2 ), 0px 5px 5px rgba( 0,0,0,0.15 );
                 outline: none;
@@ -126,13 +126,26 @@
                 width: 406px;
                 margin: 25px -25px;
             }
+            #home {
+                padding: 8px;
+                margin: 5px;
+                border: 2px solid black;
+                cursor: pointer;
+                position: fixed;
+                top: 0;
+                left: 0;
+            }
 
+            #homelink:link, #homelink:visited, #homelink:hover, #homelink:active {
+                color: #b8b9bb;
+            }
             
         </style>
     </head>
     <body>
 
-        
+        <a id="homelink" href="/"><div id="home">Home</div></a>
+
 
         <div class="container">
 
@@ -145,11 +158,11 @@
 
             <div class="sep"></div>
 
-            
+
 
             <form action="/userPanel" method="POST">
                 <input type="text" name="login" placeholder="Login" autofocus required>
-                <input type="text" name="email" placeholder="E-mail" autofocus required>
+                <input type="email" name="email" placeholder="E-mail" autofocus required>
                 <input type="password" name="password" placeholder="Password" minlength="4"
                        maxlength="16" required>
                 <input type="password" name="password2" placeholder="Confirm password" required>
