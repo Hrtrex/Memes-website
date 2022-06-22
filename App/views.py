@@ -279,15 +279,9 @@ ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/jbzd/", defaults={'page': ''})
-@app.route("/jbzd/<page>", methods=['POST'])
+@app.route("/jbzd/", defaults={'page': ''}, methods=['POST', 'GET'])
+@app.route("/jbzd/<page>", methods=['POST', 'GET'])
 def jbzd(page):
-    #if request.method == 'POST':
-    #    if request.form['plus']:
-    #        meme_data.
-    #    elif request.form['minus']:
-    #        vote = request.form['minus']
-        
     meme_data = Meme()
     #meme_data.get_memes_jbzd(f'{page}')
     meme_data.get_memes_jbzd('1')
@@ -297,7 +291,12 @@ def jbzd(page):
     meme_data.get_memes_kwejk('2')
     meme_data.get_memes_kwejk('3')
     meme_data.update_database()
-    #return meme_data
+    if request.method == 'POST':
+        i = request.form['i']
+        if request.form.get('plus'):
+            meme_data.plus[int(i)] += 1
+        elif request.form.get('minus'):
+            meme_data.plus[int(i)] -= 1
     return render_template("memy.html", memes = meme_data)
 
 @app.route("/upload", methods=['GET', 'POST'])

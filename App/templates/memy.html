@@ -94,11 +94,10 @@
         <img src="{{memes.image[i]}}" class="d-block mx-auto">
         <div class="d-flex justify-content-center">
             {{memes.plus[i]}}
-            <form method="post">
-                <label for="plus">+</label>
-                <input type="button" name="plus">
-                <label for="minus">-</label>
-                <input type="button" name="minus">
+            <form method="post" enctype="multipart/form-data">
+                <input type="submit" name="plus" value="+1">
+                <input type="submit" name="minus" value="-1">
+                <input type="hidden" name="i" value="{{i}}">
             </form>
         </div>
         <div>

@@ -49,7 +49,7 @@ class Meme:
             self.__image.append(link)
         
         for plus in pluses:
-            p = plus[':score']
+            p = int(plus[':score'])
             self.__plus.append(p)
 
     def get_memes_kwejk(self, page=''):
@@ -65,7 +65,7 @@ class Meme:
             self.__image.append(link)
 
         for plus in images:
-            p = plus['data-vote-up']
+            p = int(plus['data-vote-up'])
             self.__plus.append(p)
     def update_database(self):     
         path_of_the_directory = os.getcwd() + '/App/static/uploads'
