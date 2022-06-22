@@ -175,7 +175,7 @@ def home():
 def getZgloszenia():
 
     if 'loggedin' not in session:
-            return redirect('/')
+            return redirect('/login')
     if session['type'] !=2:
             return redirect('/')
 
@@ -361,6 +361,11 @@ def userP():
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute('select * from uzytkownicy')
+        cur.execute('SELECT * FROM uzytkownicy WHERE email = %s', (email,))
+        account = cur.fetchone()
+
+        if account:
+            return f"Account with that email already exists"
         cur.execute("""
         INSERT INTO uzytkownicy (login, haslo, email, typ_uzytkownika, data_dolaczenia)
         VALUES (%s, %s, %s, %s, %s);
@@ -587,3 +592,4 @@ def emailcheck():
         return render_template('login.html')
 
     return render_template('emailCheck.html')
+
