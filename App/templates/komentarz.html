@@ -107,7 +107,7 @@
         {%if mem[0]==komentarz[4]%}
         <div class="watek">
             <div class="glownykom">
-                <p>
+                <p> 
                     {{komentarz[1]}}
                 </p>
                 <div class="stopka">
@@ -121,7 +121,14 @@
                     {%if komentarz[0]==ile[0]%}
                     <div class="pokaz_odp">Odpowiedzi {{ile[1]}}</div>
                     {%endif%}
-                    {%endfor}
+                    {%endfor%}
+
+                    {%if user==komentarz[3]%}
+                    <form action="usunkomentarz" method="post">
+                        <button class="przyciskdodaj" name="usn" type="submit" value="{{komentarz[0]}}">Usun</button>
+                    </form>
+                    {%endif%}
+                   
                 </div>
             </div>
             {%for odpowiedz in odpowiedzi%}
@@ -140,7 +147,8 @@
                         {%endfor%}
                         {%for ile in ileodp%}
                         {%if ile[0]==odpowiedz[0]%}
-                        <div class="pokaz_odp">Odpowiedzi {{ile[1]}}</div>
+                        <div class="pokaz_odp"></div>
+                       
                         {%endif%}
                         {%endfor%}
                     </div>

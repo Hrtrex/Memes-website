@@ -22,11 +22,11 @@ def get_db_connection():
     return conn
 
 @app.route('/memesRanking/sorted/', methods=['POST'])
-def zastosuj_filtry():
+def zastosuj_filtry_memow():
     s='desc'
     s = request.form.get('sort')
-    sorttyp='oceny'
-    sorttyp=request.form.get('sorttyp')
+    sorttyp='oceny';
+    sorttyp=request.form.get('sorttyp');
     if sorttyp=='oceny':
         ok='Srednia ocen: ' 
     else:
@@ -35,15 +35,15 @@ def zastosuj_filtry():
     k='Wszystkie'
     k = request.form.get('kat')
     if k!='Wszystkie':
-        test=" where kategoria='"+k+"'"
-    # dodac order by data dodania
+        test=" where kategoria='"+k+"' "
+    
     conn = get_db_connection()
     cur = conn.cursor()
     #qerrys="select id_mema,tytul, nazwa_pliku,kategoria,CAST(avg(jaka_ocena) as NUMERIC(10,1)) srednia from oceny_memow,memy "+ test + "  group by id_mema having avg(jaka_ocena) is not null order by srednia " + s +";"
-    qerrys="select id_mema,tytul, nazwa_pliku,kategoria,CAST(avg(jaka_ocena) as NUMERIC(10,1)) srednia,opis from memy inner join oceny_memow on memy.id_mema=oceny_memow.Memy_id_mema "+ test + " group by id_mema having avg(jaka_ocena) is not null order by srednia " + s +";"
+    qerrys="select id_mema,tytul, nazwa_pliku,kategoria,CAST(avg(jaka_ocena) as NUMERIC(10,2)) srednia,opis from memy inner join oceny_memow on memy.id_mema=oceny_memow.Memy_id_mema "+ test + " group by id_mema having avg(jaka_ocena) is not null order by srednia " + s +";"
     #qerrys="select id_mema,tytul,nazwa_pliku from memy;"
     if sorttyp=='komentarze':
-        qerrys="select id_mema,tytul,nazwa_pliku,kategoria,count(id_komentarza) as liczba_kom,opis from komentarze,memy where "+ test+" memy.id_mema=komentarze.Memy_id_mema group by id_mema having count(id_komentarza) is not null order by liczba_kom "+ s +";"
+        qerrys="select id_mema,tytul,nazwa_pliku,kategoria,count(id_komentarza) as liczba_kom,opis from komentarze inner join memy on memy.id_mema=komentarze.Memy_id_mema "+ test+"  group by id_mema having count(id_komentarza) is not null order by liczba_kom "+ s +";"
     cur.execute(qerrys)
     memy = cur.fetchall()
     querryc="select distinct kategoria from memy;"
@@ -56,11 +56,11 @@ def zastosuj_filtry():
     conn.close()
     return render_template('memesRanking.html', memy=memy, kategorie = kategorie,k=k,sorttyp=sorttyp, ok=ok)
 
-@app.route("/memesRanking/")  
-def domyslne_filtry():
+@app.route("/memesRanking/") 
+def domyslne_filtry_memow():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('select id_mema,tytul,nazwa_pliku,kategoria,CAST(avg(jaka_ocena) as NUMERIC(10,1)) srednia,opis from oceny_memow,memy where memy.id_mema=oceny_memow.Memy_id_mema group by id_mema having avg(jaka_ocena) is not null order by srednia desc;')
+    cur.execute('select id_mema,tytul,nazwa_pliku,kategoria,CAST(avg(jaka_ocena) as NUMERIC(10,2)) srednia,opis from oceny_memow,memy where memy.id_mema=oceny_memow.Memy_id_mema group by id_mema having avg(jaka_ocena) is not null order by srednia desc;')
     memy = cur.fetchall()
     querryc="select distinct kategoria from memy;"
     cur.execute(querryc)
@@ -80,7 +80,7 @@ def zastosuj_filtry_uzytkownikow():
     us='desc'
     us = request.form.get('usort')
     usorttyp='oceny'
-    usorttyp=request.form.get('usorttyp')
+    usorttyp=request.form.get('usorttyp');
     if usorttyp=='oceny':
         uok='Srednia ocen wyslanych memow: ' 
     else:
@@ -93,8 +93,10 @@ def zastosuj_filtry_uzytkownikow():
     cur.close()
     conn.close()
     miejsca=[i+1 for i in range(len(uzytkownicy))]
+   
+    
 
-    return render_template('usersRanking.html', uzytkownicy=uzytkownicy,miejsca=miejsca, uok=uok)
+    return render_template('usersRanking.html', uzytkownicy=uzytkownicy,miejsca=miejsca,uok=uok)
 
 @app.route("/usersRanking/") 
 def domyslne_filtry_uzytkownikow():
@@ -105,52 +107,78 @@ def domyslne_filtry_uzytkownikow():
     cur.close()
     conn.close()
     miejsca=[i+1 for i in range(len(uzytkownicy))]
-    uok='Srednia ocen wyslanych memow: ' 
-    return render_template('usersRanking.html', uzytkownicy=uzytkownicy,miejsca=miejsca)
+    uok='Srednia ocen wyslanych memow: '
+    return render_template('usersRanking.html', uzytkownicy=uzytkownicy,miejsca=miejsca, uok=uok)
 
-@app.route("/komentarze")
+
+@app.route("/komentarze", methods=['POST', 'GET'])
 def komentarze():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('select * from memy;')
-    memy = cur.fetchall()
-    cur.execute('select * from komentarze where komentarze_id_komentarza is null;')
-    komentarze=cur.fetchall()
-    cur.execute('select * from komentarze where komentarze_id_komentarza is not null')
-    odpowiedzi=cur.fetchall()
-    cur.execute('select komentarze.id_komentarza,(dodatnie.plusy) as fajny, (ujemne.minusy) as nieladny from komentarze, (select komentarze_id_komentarza,sum(jaka_ocena) as plusy from oceny_komentarzy group by komentarze_id_komentarza) as dodatnie, (select komentarze_id_komentarza,count(jaka_ocena) as minusy from oceny_komentarzy where jaka_ocena=0 group by komentarze_id_komentarza) as ujemne where komentarze.id_komentarza=dodatnie.komentarze_id_komentarza and komentarze.id_komentarza = ujemne.komentarze_id_komentarza;')
-    oceny=cur.fetchall()
-    cur.execute('select komentarze_id_komentarza, count(komentarze_id_komentarza) as ilosc from komentarze where komentarze_id_komentarza is not null group by komentarze_id_komentarza;')
-    ileodp=cur.fetchall()
-    cur.close()
-    conn.close()
-    if 'id' in session:
-        return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,user=session['id'])
-    return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp)
+    if request.method == 'GET':
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('select * from memy;')
+        memy = cur.fetchall()
+        cur.execute('select * from komentarze where komentarze_id_komentarza is null;')
+        komentarze=cur.fetchall()
+        cur.execute('select * from komentarze where komentarze_id_komentarza is not null')
+        odpowiedzi=cur.fetchall()
+        cur.execute('select komentarze.id_komentarza,(dodatnie.plusy) as fajny, (ujemne.minusy) as nieladny from komentarze, (select komentarze_id_komentarza,sum(jaka_ocena) as plusy from oceny_komentarzy group by komentarze_id_komentarza) as dodatnie, (select komentarze_id_komentarza,count(jaka_ocena) as minusy from oceny_komentarzy where jaka_ocena=0 group by komentarze_id_komentarza) as ujemne where komentarze.id_komentarza=dodatnie.komentarze_id_komentarza and komentarze.id_komentarza = ujemne.komentarze_id_komentarza;')
+        oceny=cur.fetchall()
+        cur.execute('select komentarze_id_komentarza, count(komentarze_id_komentarza) as ilosc from komentarze where komentarze_id_komentarza is not null group by komentarze_id_komentarza;')
+        ileodp=cur.fetchall()
+        cur.close()
+        conn.close()
+        if 'id' in session:
+            return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,user=session['id'])
+        return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp)
 
 @app.route("/wstawkomentarz",methods=['POST'])
 def wstawkom():
     if 'loggedin' not in session:
-        return redirect("/komentarze")    
+        return redirect("/komentarze")  
     conn = get_db_connection()
     cur = conn.cursor()
-    
     idmema = request.form["wstaw komentarz"]
     tresc=request.form["message"]
-    cur.execute("insert into komentarze values(default,'"+ tresc+"',current_date,"+str(session['id'])+","+idmema +",null );")
+    idkom=request.form["usn"]
+   
+    #if action=="wstawkomentarz":
+        
+    cur.execute("insert into komentarze values(default,'"+ tresc+"',current_date,"+str(session['id'])+","+idmema +",NULL );")
     conn.commit()
+    #if action=="usun":
+        
+    cur.execute("delete from komentarze where komentarze.id_komentarza='"+idkom+"';")
+    conn.commit()
+    cur.close()
     conn.close()
     return redirect("/komentarze")
-   
+
+@app.route("/usunkomentarz", methods=['POST', 'GET'])
+def usunkom():
+    if 'loggedin' not in session:
+        return redirect("/komentarze")
+    komentarz = request.form['usn']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(f"delete from komentarze where komentarze.id_komentarza={komentarz}")
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect("/komentarze")
+    #global komentarze
+    #print(komentarze)
+    #print(komentarze[:][3])
+
 @app.route("/")
 def home():
     if 'loggedin' in session:
         return render_template('index.html', email=session['email'])
     return render_template("index.html")
 
-@app.route("/<name>")
-def user(name):
-    return render_template("index.html")
+#@app.route("/<name>")
+#def user(name):
+#    return render_template("index.html")
 
 @app.route("/admin")
 def getZgloszenia():
