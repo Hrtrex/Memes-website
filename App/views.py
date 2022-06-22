@@ -139,6 +139,7 @@ def wstawkom():
     tresc=request.form["message"]
     cur.execute("insert into komentarze values(default,'"+ tresc+"',current_date,"+str(session['id'])+","+idmema +",null );")
     conn.commit()
+    conn.close()
     return redirect("/komentarze")
    
 @app.route("/")
@@ -255,7 +256,7 @@ def allowed_file(filename):
 
 @app.route("/jbzd/", defaults={'page': ''})
 @app.route("/jbzd/<page>")
-def jbzd():
+def jbzd(page):
     meme_data = Meme()
     #meme_data.get_memes_jbzd(f'{page}')
     meme_data.get_memes_jbzd('1')
@@ -264,8 +265,9 @@ def jbzd():
     meme_data.get_memes_kwejk('1')
     meme_data.get_memes_kwejk('2')
     meme_data.get_memes_kwejk('3')
-    return meme_data
-    #return render_template("memy.html", memes = meme_data)
+    meme_data.update_database()
+    #return meme_data
+    return render_template("memy.html", memes = meme_data)
 
 @app.route("/kwejk/", defaults={'page': ''})
 @app.route("/kwejk/<page>")
@@ -428,7 +430,7 @@ def login():
                 flash('Incorrect email or password')
         else:
             flash('Incorrect email or password')
-   
+    conn.close()
     return render_template('login.html')
 
 
@@ -439,8 +441,8 @@ def logout():
    session.pop('loggedin', None)
    session.pop('id', None)
    session.pop('email', None)
-   global email
-   del email
+   #global email
+   #del email
    return redirect(url_for('login'))
 
 

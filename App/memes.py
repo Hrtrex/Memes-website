@@ -2,7 +2,7 @@
 #import re
 import requests
 from bs4 import BeautifulSoup
-
+import os
 
 class Meme:
     JBZD = 'https://jbzd.com.pl/str/'
@@ -67,3 +67,8 @@ class Meme:
         for plus in images:
             p = plus['data-vote-up']
             self.__plus.append(p)
+    def update_database(self):     
+        path_of_the_directory = 'C:\\Users\\rafal\\source\\repos\\usmiechnij-sie\\App\\static\\uploads'
+        for files in os.listdir(path_of_the_directory):
+            self.__image.append('/static/uploads/' + files)
+            print('/static/uploads/' + files)
