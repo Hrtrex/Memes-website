@@ -282,15 +282,16 @@ def allowed_file(filename):
 @app.route("/jbzd/", defaults={'page': ''}, methods=['POST', 'GET'])
 @app.route("/jbzd/<page>", methods=['POST', 'GET'])
 def jbzd(page):
-    meme_data = Meme()
-    #meme_data.get_memes_jbzd(f'{page}')
-    meme_data.get_memes_jbzd('1')
-    meme_data.get_memes_jbzd('2')
-    meme_data.get_memes_jbzd('3')
-    meme_data.get_memes_kwejk('1')
-    meme_data.get_memes_kwejk('2')
-    meme_data.get_memes_kwejk('3')
-    meme_data.update_database()
+    if request.method == 'GET':
+        global meme_data
+        meme_data = Meme()
+        meme_data.get_memes_jbzd('1')
+        meme_data.get_memes_jbzd('2')
+        meme_data.get_memes_jbzd('3')
+        meme_data.get_memes_kwejk('1')
+        meme_data.get_memes_kwejk('2')
+        meme_data.get_memes_kwejk('3')
+        meme_data.update_database()
     if request.method == 'POST':
         i = request.form['i']
         if request.form.get('plus'):
