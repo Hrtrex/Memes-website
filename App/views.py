@@ -445,7 +445,9 @@ def login():
                 session['id'] = account[0]
                 session['email'] = account[3]
                 session['type'] = account[4]
-                return render_template("index.html",email=email,id=id)
+                return render_template("komentarz.html",email=email,id=id)
+                
+
 
                 
                 
@@ -593,3 +595,6 @@ def emailcheck():
 
     return render_template('emailCheck.html')
 
+@app.route('/logintest', methods = ['POST', 'GET'])
+def testing123():
+    return render_template('logintest.html')
