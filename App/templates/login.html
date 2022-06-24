@@ -162,6 +162,7 @@
             }
 
         .alert-error {
+            margin-top: 50px;
             padding: 8px;
             background-color: red;
             color: white;
@@ -219,9 +220,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 
-    {% for message in get_flashed_messages() %}
-    <div class="alert-error">Error: {{ message }}</div>
-    {% endfor %}
+
 
 
     <div class="container">
@@ -241,12 +240,12 @@
             <input type="text" name="email" placeholder="E-mail" autofocus required>
             <input type="password" name="password" placeholder="Password" required>
 
-            <a id="reset" href="">Forgot your password?</a>
+            <a id="reset" href="{{url_for('emailcheck')}}">Forgot your password?</a>
 
             <a id="reset" href="{{url_for('register')}}">Create account</a>
 
 
-            <input id="submit" type="submit" href="/komentarze "value="Sign in">
+            <input id="submit" type="submit" href="/komentarze " value="Sign in">
         </form>
 
 
@@ -256,7 +255,9 @@
     </div>
 
 
-
+    {% for message in get_flashed_messages() %}
+    <div class="alert-error">Error: {{ message }}</div>
+    {% endfor %}
 
 
 </body>
