@@ -2,61 +2,74 @@
 #import re
 import requests
 from bs4 import BeautifulSoup
+import os
 
-JBZD = 'https://jbzd.com.pl/top/miesiac/'
-KWEJK = 'https://kwejk.pl/top/tydzien/'
-
-usr_agent = {
+class Meme:
+    JBZD = 'https://jbzd.com.pl/str/'
+    KWEJK = 'https://kwejk.pl/top/tydzien/'
+    usr_agent = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11'
-}
+    }
+    def __init__(self):
+        self.__image = []
+        self.__plus = []
+        self.__title = []
+        self.__descr = []
+        self.__category = []
+        self.__length = len(self.__image)
+    #def __new__(cls):
+    #    cls.get_memes_jbzd(cls)
+    #def __setattr__(self):
+    @property
+    def image(self):
+        return self.__image
+    @property
+    def plus(self):
+        return self.__plus
+    @property
+    def length(self):
+        if self.__length != len(self.__image):
+            self.__length = len(self.__image)
+        return self.__length
+    #def __iter__(self):
+    #def __next__(self):
+        
+    def get_memes_jbzd(self, page=''):
+        searchurl = self.JBZD + page
+        response = requests.get(searchurl, headers=self.usr_agent) # request url
+        html = response.text
 
-def get_urls_jbzd(page=''):
+        # find all divs (imgs/spans) where class='article-image'
+        soup = BeautifulSoup(html,'html.parser')
+        images = soup.findAll('img', {'class': 'article-image'})
+        pluses = soup.findAll('vote')
 
-    # url query string
-    searchurl = JBZD + page
+        for img in images:
+            link = img['src'] # soup.img.attrs['src']
+            self.__image.append(link)
+        
+        for plus in pluses:
+            p = int(plus[':score'])
+            self.__plus.append(p)
 
-    # request url
-    response = requests.get(searchurl, headers=usr_agent)
-    #response = requests.get(searchurl, auth=('user', 'pass'))
-    html = response.text
+    def get_memes_kwejk(self, page=''):
+        searchurl = self.KWEJK + '' if page == '' else self.KWEJK + f'strona/{page}'
+        response = requests.get(searchurl, headers=self.usr_agent)
+        html = response.text
+        soup = BeautifulSoup(html, 'html.parser')
+        # on this site in div we have both img sources and votes number
+        images = soup.findAll('div', class_='media-element')
 
-    # find all divs (imgs/spans) where class='article-image'
-    soup = BeautifulSoup(html,'html.parser')
-    images = soup.findAll('img', {'class': 'article-image'})
-    pluses = soup.findAll('vote')
-    
-    memelinks = []
-    
-    for img in images:
-        link = img['src'] # soup.img.attrs['src']
-        memelinks.append(link)
+        for img in images:
+            link = img['data-image']
+            self.__image.append(link)
 
-    pluses_list = []
-
-    for plus in pluses:
-        p = plus[':score']
-        pluses_list.append(p)
-       
-
-    return memelinks, pluses_list
-
-def get_urls_kwejk(page=''):
-    searchurl = KWEJK + '' if page == '' else KWEJK + f'strona/{page}'
-    response = requests.get(searchurl, headers=usr_agent)
-    html = response.text
-
-    soup = BeautifulSoup(html, 'html.parser')
-    # on this site in div we have both img sources and votes number
-    images = soup.findAll('div', class_='media-element')
-
-    memelinks = []
-    for img in images:
-        link = img['data-image']
-        memelinks.append(link)
-
-    pluses_list = []
-    for plus in images:
-        p = plus['data-vote-up']
-        pluses_list.append(p)
-
-    return memelinks, pluses_list
+        for plus in images:
+            p = int(plus['data-vote-up'])
+            self.__plus.append(p)
+    def update_database(self):     
+        path_of_the_directory = os.getcwd() + '/App/static/uploads'
+        #path_of_the_directory =  '/tmp/8da53f03f36c715/App/static/uploads'
+        for files in os.listdir(path_of_the_directory):
+            self.__image.append('/static/uploads/' + files)
+            #print('/static/uploads/' + files)
