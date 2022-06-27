@@ -1,11 +1,12 @@
+
 {% extends 'index.html' %}
 {% block content %}
+<html>
 
-    
 <head>
     <meta charset="utf-8">
     <style>
-       .watek {
+        .watek {
             width: min(90%,1140px);
             margin: auto;
         }
@@ -16,25 +17,25 @@
 
         .glownykom {
             padding: 20px;
-            margin-top:50px;
+            margin-top: 50px;
             background-color: #2e2e2e;
             border: 1px solid rgb(0 0 0);
             border-radius: .5rem;
             min-width: 100%;
-            color:white;
+            color: white;
             box-shadow: 0 0 4px rgb(255 255 255);
         }
 
         .odpowiedz {
             margin-left: 100px;
-            margin-top:20px;
+            margin-top: 20px;
             padding: 20px;
             background-color: #2e2e2e;
             border: 1px solid rgb(0 0 0);
             border-radius: .5rem;
             min-width: 80%;
             box-shadow: 0 0 4px rgb(255 255 255);
-            color:white;
+            color: white;
         }
 
         .stopka {
@@ -44,6 +45,18 @@
             gap: 30px;
             justify-content: flex-end;
             align-items: center;
+        }
+
+        .nick {
+            margin-top: -10px;
+            margin-bottom: -5px;
+            display: flex;
+            font-size: 1.5rem;
+            color: white;
+            gap: 30px;
+            justify-content: flex-start;
+            align-items: center;
+            font-weight: 500;
         }
 
         .we {
@@ -56,6 +69,7 @@
         }
 
         .oknotekstowe {
+            margin-top: 50px;
             padding: 20px;
             background-color: #2e2e2e;
             border: 1px solid rgb(0 0 0);
@@ -66,7 +80,7 @@
             font-size: var(--bs-body-font-size);
             font-weight: var(--bs-body-font-weight);
             line-height: var(--bs-body-line-height);
-            color:white;
+            color: white;
         }
 
 
@@ -82,8 +96,9 @@
             font-weight: 400;
             line-height: 1.5;
             color: #9e9e9e;
-            margin-top:5px;
+            margin-top: 5px;
         }
+
         .przycisk {
             padding: 10px;
             background-color: #2e2e2e;
@@ -95,24 +110,87 @@
             font-weight: 400;
             line-height: 1.5;
             color: #9e9e9e;
-            margin-top:5px;
+            margin-top: 5px;
         }
 
+        .lubi {
+            background-color: #2e2e2e;
+            border: 1px solid rgb(0 0 0);
+            border-radius: .5rem;
+            box-shadow: 0 0 4px rgb(255 255 255);
+            font-size: 0.7rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #9e9e9e;
+            margin-top: 5px;
+            justify-content: flex-end;
+            margin-right:10px;
+            margin-left:5px;
+            position:relative;
+            transition-duration:500ms;
+
+        }
+        .lubi:hover{
+            transform:scale(1.2);
+        }
+        .nielubi {
+            background-color: #2e2e2e;
+            border: 1px solid rgb(0 0 0);
+            border-radius: .5rem;
+            box-shadow: 0 0 4px rgb(255 255 255);
+            font-size: 0.7rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #9e9e9e;
+            margin-top: 5px;
+          
+            margin-right: 5px;
+            margin-left: 5px;
+            position:relative;
+         
+            
+        }
+        .odp {
+            background-color: #2e2e2e;
+            border: 1px solid rgb(0 0 0);
+            border-radius: .5rem;
+            box-shadow: 0 0 4px rgb(255 255 255);
+            font-size: 0.7rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #9e9e9e;
+            margin-top: 5px;
+            margin-right: 15px;
+            justify-content: flex-end;
+            transition-duration: 500ms;
+        }
+        .odp:hover {
+            transform: scale(1.2);
+        }
         .pokaz_odp {
             cursor: pointer;
+        }
+
+        .memy {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 150px;
+            margin-bottom: 40px;
         }
     </style>
 </head>
 <body>
     {% for mem in memy %}
-    <img src="{{mem[1]}}" class="d-block mx-auto">
+    <img src="{{mem[1]}}" class="memy">
     <div>
         <div class="dodawanie">
             <div class="we">
-                <form  action="wstawkomentarz" method="post" class="form">
-                    
-                    <textarea name="message" cols="30" rows="10" class="oknotekstowe" placeholder="Wpisz treść komentarza" style="resize: none"></textarea>
+                <form action="wstawkomentarz" method="post" class="form">
+
+                    <textarea name="message" id="tresc{{mem[0]}}" cols="30" rows="10" class="oknotekstowe" placeholder="Wpisz treść komentarza" style="resize: none"></textarea>
                     <button name="wstaw komentarz" type="submit" value="{{mem[0]}}" class="przyciskdodaj">Dodaj Komentarz</button>
+                    <input type="radio" name="odpowiedz" checked="checked" id="radio{{mem[0]}}" style="display:none; visibility:hidden;" value="null" />
                 </form>
             </div>
         </div>
@@ -120,19 +198,29 @@
         {%if mem[0]==komentarz[4]%}
         <div class="watek">
             <div class="glownykom">
-                <p> 
+                <div class="nick">{{komentarz[6]}}</div>
+                <hr style="width: 100%; border: 2px dashed solid white; ">
+                <p>
                     {{komentarz[1]}}
                 </p>
                 <div class="stopka">
-                    {%for ocena in oceny%}
-                    {%if komentarz[0]==ocena[0]%}
-                    <div>Lubi {{ocena[1]}}</div>
-                    <div>Nie lubi {{ocena[2]}}</div>
-                    {%endif%}
-                    {%endfor%}
+                    <button onclick="odp({{komentarz[0]}},'{{komentarz[6]}}',{{mem[0]}})" name="odpowiedz" value="odpowiedz{{komentarz[0]}}" type="submit" class="odp">Odpowiedz!</button>
+                    <form action="ocena" method="post">
+                        {%if komentarz[0] is in idocena%}
+                        {%for ocena in oceny%}
+                        {%if komentarz[0]==ocena[0]%}
+                        <button name="ocena" value="lubi{{komentarz[0]}}" type="submit" class="lubi">Lubię to!&nbsp;{{ocena[1]}}</button>
+                        <button name="ocena" value="nielubi{{komentarz[0]}}" type="submit" class="lubi">Nie podoba mi się :(&nbsp;{{ocena[2]}}</button>
+                        {%endif%}
+                        {%endfor%}
+                        {%else%}
+                        <button name="ocena" value="lubi{{komentarz[0]}}" type="submit" class="lubi">Lubię to! 0</button>
+                        <button name="ocena" value="nielubi{{komentarz[0]}}" type="submit" class="lubi">Nie podoba mi się :( 0</button>
+                        {%endif%}
+                    </form>
                     {%for ile in ileodp%}
                     {%if komentarz[0]==ile[0]%}
-                    <div class="pokaz_odp">Odpowiedzi {{ile[1]}}</div>
+                    <div class="pokaz_odp">Odpowiedzi: {{ile[1]}}</div>
                     {%endif%}
                     {%endfor%}
 
@@ -141,29 +229,37 @@
                         <button class="przycisk" name="usn" type="submit" value="{{komentarz[0]}}">Usun</button>
                     </form>
                     {%endif%}
-                   
+
                 </div>
             </div>
             {%for odpowiedz in odpowiedzi%}
             {%if odpowiedz[5]==komentarz[0]%}
             <div>
                 <div class="odpowiedz">
+                    <div class="nick">{{komentarz[6]}}</div>
+                    <hr style="width: 100%; border: 2px dashed solid white; ">
                     <p>
                         {{odpowiedz[1]}}
                     </p>
                     <div class="stopka">
-                        {%for ocena in oceny%}
-                        {%if odpowiedz[0]==ocena[0]%}
-                        <div>Lubi {{ocena[1]}}</div>
-                        <div>Nie lubi {{ocena[2]}}</div>
+                        <form action="ocena" method="post">
+                            {%if komentarz[0] is in idocena%}
+                            {%for ocena in oceny%}
+                            {%if komentarz[0]==ocena[0]%}
+                            <button name="ocena" value="lubi{{komentarz[0]}}" type="submit" class="lubi">Lubię to!&nbsp;{{ocena[1]}}</button>
+                            <button name="ocena" value="nielubi{{komentarz[0]}}" type="submit" class="lubi">Nie podoba mi się :(&nbsp;{{ocena[2]}}</button>
+                            {%endif%}
+                            {%endfor%}
+                            {%else%}
+                            <button name="ocena" value="lubi{{komentarz[0]}}" type="submit" class="lubi">Lubię to! 0</button>
+                            <button name="ocena" value="nielubi{{komentarz[0]}}" type="submit" class="lubi">Nie podoba mi się :( 0</button>
+                            {%endif%}
+                        </form>
+                        {%if user==komentarz[3]%}
+                        <form action="usunkomentarz" method="post">
+                            <button class="przycisk" name="usn" type="submit" value="{{komentarz[0]}}">Usun</button>
+                        </form>
                         {%endif%}
-                        {%endfor%}
-                        {%for ile in ileodp%}
-                        {%if ile[0]==odpowiedz[0]%}
-                        <div class="pokaz_odp"></div>
-                       
-                        {%endif%}
-                        {%endfor%}
                     </div>
                 </div>
             </div>
@@ -175,5 +271,15 @@
     </div>
     {% endfor %}
 </body>
-   
+</html>
+<script>
+    function odp(id_komentarza, login, id_mema) {
+        document.getElementById("radio" + id_mema).setAttribute("value", id_komentarza);
+        document.getElementById("tresc" + id_mema).innerHTML = "@" + login;
+
+    }
+
+
+</script>
 {% endblock %}
+

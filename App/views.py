@@ -118,19 +118,23 @@ def komentarze():
         cur = conn.cursor()
         cur.execute('select * from memy;')
         memy = cur.fetchall()
-        cur.execute('select * from komentarze where komentarze_id_komentarza is null;')
+        cur.execute('select id_komentarza, tresc, data_dodania, uzytkownicy_id_uzytkownika, memy_id_mema,komentarze_id_komentarza,login from komentarze inner join uzytkownicy on komentarze.uzytkownicy_id_uzytkownika=uzytkownicy.id_uzytkownika where komentarze_id_komentarza is null;')
         komentarze=cur.fetchall()
-        cur.execute('select * from komentarze where komentarze_id_komentarza is not null')
+        cur.execute('select id_komentarza, tresc, data_dodania, uzytkownicy_id_uzytkownika, memy_id_mema,komentarze_id_komentarza,login from komentarze inner join uzytkownicy on komentarze.uzytkownicy_id_uzytkownika=uzytkownicy.id_uzytkownika where komentarze_id_komentarza is not null;')
         odpowiedzi=cur.fetchall()
-        cur.execute('select komentarze.id_komentarza,(dodatnie.plusy) as fajny, (ujemne.minusy) as nieladny from komentarze, (select komentarze_id_komentarza,sum(jaka_ocena) as plusy from oceny_komentarzy group by komentarze_id_komentarza) as dodatnie, (select komentarze_id_komentarza,count(jaka_ocena) as minusy from oceny_komentarzy where jaka_ocena=0 group by komentarze_id_komentarza) as ujemne where komentarze.id_komentarza=dodatnie.komentarze_id_komentarza and komentarze.id_komentarza = ujemne.komentarze_id_komentarza;')
+        cur.execute('select komentarze.id_komentarza,(dodatnie.plusy) as fajny, (ujemne.minusy) as nieladny from komentarze, (select komentarze_id_komentarza,sum(jaka_ocena) as plusy from oceny_komentarzy group by komentarze_id_komentarza) as dodatnie, (select id_komentarza,count(oceny.jaka_ocena) as minusy from komentarze left outer join (select * from oceny_komentarzy where jaka_ocena=0) oceny on id_komentarza = oceny.komentarze_id_komentarza group by id_komentarza) as ujemne where komentarze.id_komentarza=dodatnie.komentarze_id_komentarza and komentarze.id_komentarza = ujemne.id_komentarza;')
         oceny=cur.fetchall()
+        idocena=[]
+        for x in oceny:
+            idocena.append(x[0])
+            print(idocena)
         cur.execute('select komentarze_id_komentarza, count(komentarze_id_komentarza) as ilosc from komentarze where komentarze_id_komentarza is not null group by komentarze_id_komentarza;')
         ileodp=cur.fetchall()
         cur.close()
         conn.close()
     if 'id' in session:
-        return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,user=session['id'])
-    return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp)
+        return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,idocena=idocena,user=session['id'])
+    return render_template('komentarz.html', memy=memy,komentarze=komentarze,odpowiedzi=odpowiedzi,oceny=oceny,ileodp=ileodp,idocena=idocena)
 
 @app.route("/wstawkomentarz",methods=['POST'])
 def wstawkom():
@@ -139,12 +143,37 @@ def wstawkom():
     conn = get_db_connection()
     cur = conn.cursor()
     idmema = request.form["wstaw komentarz"]
+    odpowiedz=request.form["odpowiedz"]
     tresc=request.form["message"]
-    cur.execute("insert into komentarze values(default,'"+ tresc+"',current_date,"+str(session['id'])+","+idmema +",NULL );")
+    cur.execute("insert into komentarze values(default,'"+ tresc+"',current_date,"+str(session['id'])+","+idmema +","+odpowiedz+");")
     conn.commit()
     conn.commit()
     cur.close()
     conn.close()
+    return redirect("/komentarze")
+
+@app.route("/ocena", methods=['POST', 'GET'])
+def dodajocene():
+    if 'loggedin' not in session:
+        return redirect("/komentarze") 
+    conn = get_db_connection()
+    cur = conn.cursor()
+    akcja=request.form['ocena'];
+    for i in range(len(akcja)):
+        if akcja[i].isdigit() == True:
+            action = akcja[:i]
+            id = akcja[i:]
+            break
+    cur.execute("select uzytkownicy_id_uzytkownika,komentarze_id_komentarza from oceny_komentarzy where uzytkownicy_id_uzytkownika="+str(session['id'])+" and komentarze_id_komentarza="+str(id)+";")
+    spr=cur.fetchall()
+    if len(spr)>0:
+        return redirect("/komentarze")
+    if action=='lubi':
+        cur.execute("insert into oceny_komentarzy values(1,"+str(session['id'])+","+str(id)+");")
+        conn.commit()
+    if action=='nielubi':
+        cur.execute("insert into oceny_komentarzy values(0,"+str(session['id'])+","+str(id)+");")
+        conn.commit()
     return redirect("/komentarze")
 
 @app.route("/usunkomentarz", methods=['POST'])
