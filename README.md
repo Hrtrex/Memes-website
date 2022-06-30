@@ -17,12 +17,15 @@ Newest version is currently on `development` branch.
 
 You can see deployed app on: https://usmiechnij-sie-dev.azurewebsites.net
 
+App is currently connected with Azure database for PostgreSQL server.
+
 ## Technologies
 Project is created with:
 * Flask (2.1.1)
 * Jinja2 (3.1.1)
 * beautifulsoup4 (4.11.1)
 * HTML + CSS
+* PostgreSQL 14
 
 ## Setup
 To run this project locally, you can create Python virtual environment from `requirements.txt`.
