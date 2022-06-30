@@ -3,6 +3,7 @@
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
+* [To Do](#to-do)
 
 ## General info
 Web app for browsing memes from other popular sites such:
